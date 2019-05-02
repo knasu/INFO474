@@ -18,6 +18,7 @@
       .then((result) => {
         allYearsData = result
         makeScatterPlot(1960)
+        makeDropdown();
       });
   }
 
@@ -50,8 +51,6 @@
       .attr('fill', '#737373')
       .style('font-size', '24pt')
       .text(year)
-
-    makeDropdown();
   }
 
   function filterByYear(year) {
