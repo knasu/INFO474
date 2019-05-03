@@ -8,6 +8,10 @@
 
   // load data and make scatter plot after window loads
   window.onload = function() {
+    d3.select('body').append('text')
+      .attr('class', 'title')
+      .text("World Life Expectancy and Fertility Through Time");
+
     svgContainer = d3.select('body')
       .append('svg')
       .attr('width', 500)
@@ -80,19 +84,12 @@
     dropDownDiv.select("select").on("change", function() {
       var selected = this.value;
       makeScatterPlot(selected)
-
     });
   }
   
 
   // make title and axes labels
   function makeLabels() {
-    svgContainer.append('text')
-      .attr('x', 100)
-      .attr('y', 40)
-      .style('font-size', '14pt')
-      .text("Countries by Life Expectancy and Fertility Rate");
-
     svgContainer.append('text')
       .attr('x', 130)
       .attr('y', 490)
@@ -122,9 +119,14 @@
 
     // make tooltip
     let div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+      .attr("class", "tooltip")
+      .style("opacity", 0);
 
+    let divFields = div.append("div")
+      .attr('class', 'tooltip-fields')
+
+    let divValues = div.append("div")
+      .attr('class', 'tooltip-vals')
 
     // append data to SVG and plot as points
     svgContainer.selectAll('.dot')
@@ -143,9 +145,13 @@
           div.transition()
             .duration(200)
             .style("opacity", .9);
-          div.html("Country: " + d.location + "<br/>" + "Year: " + d.time + "<br/>" + "Life Expectancy: " + d.life_expectancy + "<br/>" + "Fertility: " + d.fertility_rate + "<br/>" + "Population: " + numberWithCommas(d["pop_mlns"]*1000000) + "<br/>")
+          divFields.html("Country: " + "<br/>" + "Year: " + "<br/>" + "Life Expectancy: " + "<br/>" + "Fertility: " + "<br/>" + "Population: ")
+          divValues.html(d.location + "<br/>" + d.time + "<br/>" + d.life_expectancy + "<br/>" + d.fertility_rate + "<br/>" + d.pop_mlns)
+
+          div
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 28) + "px");
+
         })
         .on("mouseout", (d) => {
           div.transition()
