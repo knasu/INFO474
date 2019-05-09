@@ -1,0 +1,36 @@
+div.tooltip {
+    box-shadow: 2px 2px 5px grey;
+    position: absolute;
+    text-align: left;
+    width: 300px;
+    height: 90px;
+    padding: 10px;
+    font: 12px sans-serif;
+    background: white;
+    border: 0px;
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+div.tooltip-fields {
+    width: 150px;
+    height: 65px;
+    font: 12px sans-serif;
+    color: gray;
+    background: white;
+    border: 0px;
+    pointer-events: none;
+}
+
+div.tooltip-vals {
+    position: absolute;
+    top: 8px;
+    right: 5px;
+    width: 140px;
+    height: 65px;
+    font: 12px sans-serif;
+    color: black;
+    background: white;
+    border: 0px;
+    pointer-events: none;
+}
