@@ -115,25 +115,27 @@
         filterDiv.selectAll(".checkbox").on("change", function() {
             // let cb = d3.select(this)
 
-            let selected = this.value;
+            let dataType = this.value;
             // console.log(selected)
 
             console.log(this.checked)
 
-            let opacity = this.checked ? 1.0 : 0.2;
-            console.log(opacity)
-            // let display = this.checked ? "none" : "inline";
-      
-            // svgContainer.selectAll("circle")
-            //   .filter(function(d) {return selected == d.time;})
-            //   .attr("display", display);
+            // let opacity = this.checked ? 1.0 : 0.2;
+            // console.log(opacity)
+
+            if (this.checked) {
+              svgContainer.selectAll("rect")
+                .filter(function(d) {return dataType != d.Data;})
+                .style("opacity", 0.2);
             
-            svgContainer.selectAll("rect")
-              .filter(function(d) {return selected != d.Data;})
-              .style("opacity", 0.2);
-      
-            // svgContainer.select("text.year")
-            //   .text(selected)
+              svgContainer.selectAll("rect")
+                .filter(function(d) {return dataType == d.Data;})
+                .style("opacity", 1.0);
+            } else if (!this.checked) {
+              svgContainer.selectAll("rect")
+                .filter(function(d) {return dataType != d.Data;})
+                .style("opacity", 1.0);
+            }
           });
     }
   
