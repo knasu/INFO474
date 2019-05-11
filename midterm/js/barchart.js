@@ -111,32 +111,29 @@
     }
 
     function makeFilter() {
-        filterDiv = d3.select("#filter")
-        filterDiv.selectAll(".checkbox").on("change", function() {
-            // let cb = d3.select(this)
+      filterDiv = d3.select("#filter")
+      let lastClick = "";
+      filterDiv.selectAll(".data-type").on("click", function() {
 
-            let dataType = this.value;
-            // console.log(selected)
+        let dataType = this.textContent;
+        console.log(dataType)
 
-            console.log(this.checked)
-
-            // let opacity = this.checked ? 1.0 : 0.2;
-            // console.log(opacity)
-
-            if (this.checked) {
-              svgContainer.selectAll("rect")
-                .filter(function(d) {return dataType != d.Data;})
-                .style("opacity", 0.2);
-            
-              svgContainer.selectAll("rect")
-                .filter(function(d) {return dataType == d.Data;})
-                .style("opacity", 1.0);
-            } else if (!this.checked) {
-              svgContainer.selectAll("rect")
-                .filter(function(d) {return dataType != d.Data;})
-                .style("opacity", 1.0);
-            }
-          });
+        if (lastClick == dataType) {
+          lastClick = "";
+          svgContainer.selectAll("rect")
+            .filter(function(d) {return dataType != d.Data;})
+            .style("opacity", 1.0);
+        } else {
+          lastClick = dataType
+          svgContainer.selectAll("rect")
+            .filter(function(d) {return dataType != d.Data;})
+            .style("opacity", 0.2);
+      
+          svgContainer.selectAll("rect")
+            .filter(function(d) {return dataType == d.Data;})
+            .style("opacity", 1.0);
+        }
+      });
     }
   
   
