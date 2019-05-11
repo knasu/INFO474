@@ -2,8 +2,9 @@ div.tooltip {
     box-shadow: 2px 2px 5px grey;
     position: absolute;
     text-align: left;
-    width: 300px;
-    height: 90px;
+    /* width: 300px; */
+    /* height: 90px; */
+    /* width: 100%; */
     padding: 10px;
     font: 12px sans-serif;
     background: white;
@@ -13,8 +14,10 @@ div.tooltip {
 }
 
 div.tooltip-fields {
-    width: 150px;
+    /* width: 150px; */
+    float: left;
     height: 65px;
+    padding-right: 10px;
     font: 12px sans-serif;
     color: gray;
     background: white;
@@ -23,10 +26,12 @@ div.tooltip-fields {
 }
 
 div.tooltip-vals {
-    position: absolute;
+    /* position: absolute; */
+    float: right;
     top: 8px;
+    /* left: 5px; */
     right: 5px;
-    width: 140px;
+    /* width: 140px; */
     height: 65px;
     font: 12px sans-serif;
     color: black;
