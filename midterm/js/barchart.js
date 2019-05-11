@@ -64,6 +64,9 @@
             .attr("class", "tooltip")
             .style("opacity", 0);
 
+        let seasonHeader = div.append("h3")
+          .attr('class', 'header')
+
         let divFields = div.append("div")
             .attr('class', 'tooltip-fields')
 
@@ -94,6 +97,9 @@
                     div.transition()
                       .duration(200)
                       .style("opacity", .9);
+                    
+                    seasonHeader.text("Season #" + d.Year)
+                    
                     divFields.html("Year: " + "<br/>" + "Episodes: " + "<br/>" + "Avg. Viewers (mil): " + "<br/>" + "Most Watched Episode: " + "<br/>" + "Viewers (mil): ")
                     divValues.html(d.Year + "<br/>" + d.Episodes + "<br/>" + d["Avg. Viewers (mil)"] + "<br/>" + d["Most watched episode"] + "<br/>" + d["Viewers (mil)"])
             
