@@ -42,3 +42,16 @@ div.tooltip-vals {
 h3 {
     color: red; 
 }
+
+.viz-area {
+    background-color: #FFEE3E;
+    max-width: 900px;
+}
+
+rect {
+    fill: #70B8EB;
+}
+
+.viz-area svg {
+    background-color: white;
+}

@@ -8,9 +8,10 @@
     // load data and make scatter plot after window loads
     window.onload = function() {
       // TODO: use d3 select, append, and attr to append a 500x500 SVG to body
-      svgContainer = d3.select('body').append('svg')
+      svgContainer = d3.select('body').select('div').append('svg')
         .attr('width', 800)
-        .attr('height', 500);
+        .attr('height', 500)
+        .attr('class', 'svg');
   
     //   svgContainer.append('text')
     //     .attr('x', 90)
@@ -84,6 +85,14 @@
         // 'fill' -> #4286f4
         // See here for more details:
         // https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+        svgContainer.selectAll('.dot')
+          .data(data)
+          .enter()
+          .append('text')
+            .attr('x', (d) => xMap(d) - barWidth/2)
+            .attr('y', (d) => yMap(d) - 3)
+            .text((d) => d["Avg. Viewers (mil)"]);
+
         svgContainer.selectAll('.dot')
             .data(data)
             .enter()
@@ -179,14 +188,14 @@
         .attr('y', 500)
         .text('Year');
   
-      // return Chance of Admit from a row of data
+      // return Avg. Viewers from a row of data
       let yValue = function(d) { return +d["Avg. Viewers (mil)"];}
   
       // TODO: make a linear scale for y. Use a domain of [limits.admitMax, limits.admitMin - 0.05]
       // Use a range of [50, 450]
   
       let yScale = d3.scaleLinear()
-        .domain([limits.viewMax, limits.viewMin - 0.05])
+        .domain([limits.viewMax + 2, limits.viewMin - 0.05])
         .range([50, 450]);
   
       // yMap returns a scaled y value from a row of data
@@ -224,10 +233,6 @@
       let yearMin = d3.min(greScores);
       let yearMax = d3.max(greScores);
   
-      // round x-axis limits
-    //   yearMax = Math.round(yearMax*10)/10;
-    //   yearMin = Math.round(yearMin*10)/10;
-  
       console.log(yearMin, yearMax);
   
       // TODO: Use d3.min and d3.max to find the min/max of the  admissionRates array
@@ -236,11 +241,7 @@
       let viewMax = d3.max(admissionRates);
 
       console.log(viewMin, viewMax)
-  
-      // round y-axis limits to nearest 0.05
-    //   viewMax = Number((Math.ceil(viewMax*20)/20).toFixed(2));
-    //   viewMin = Number((Math.ceil(viewMin*20)/20).toFixed(2));
-  
+
       // return formatted min/max data as an object
       return {
         yearMin : yearMin,
@@ -248,7 +249,6 @@
         viewMin : viewMin,
         viewMax : viewMax
       }
-  
     }
  
   })();
