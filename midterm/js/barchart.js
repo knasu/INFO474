@@ -102,7 +102,13 @@
                 .attr('y', yMap)
                 .attr('width', barWidth)
                 .attr('height', (d) => 450 - yMap(d))
-                .attr('fill', '#4286f4')
+                .attr('fill', (d) => { 
+                    if (d.Data == "Estimated") {
+                      return '#adadad'
+                    } else {
+                      return '#70B8EB'
+                    }
+                  })
                 .on("mouseover", (d) => {
                     div.transition()
                       .duration(200)
@@ -176,10 +182,13 @@
       // https://www.tutorialsteacher.com/d3js/axes-in-d3
       let xAxis = d3.axisBottom()
         .scale(xScale);
+
+      xAxis.tickValues()
   
       // TODO: use d3 append, attr, and call to append a "g" element to the svgContainer
       // variable and assign it a 'transform' attribute of 'translate(0, 450)' then
       // call the xAxis function
+      // .attr('transform', 'translate(15, 300)rotate(-90)')
       svgContainer.append('g')
         .attr('transform', 'translate(0, 450)')
         .call(xAxis);
