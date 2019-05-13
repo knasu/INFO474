@@ -92,15 +92,25 @@
             .attr('x', (d) => xMap(d) - barWidth/2)
             .attr('y', (d) => yMap(d) - 3)
             .attr('font-size', 12)
+            .attr('class', (d) => { 
+              if (d.Data == "Estimated") {
+                return 'Estimated'
+              } else {
+                return 'Actual'
+              }
+            })
             .text((d) => d["Avg. Viewers (mil)"]);
 
-        svgContainer.selectAll('.dot')
+        svgContainer.selectAll('.bar')
             .data(data)
             .enter()
             .append('rect')
+                .attr('class', 'bar')
                 .attr('x', (d) => xMap(d) - barWidth/2)
                 .attr('y', yMap)
                 .attr('width', barWidth)
+                .attr('stroke', '#A9A9A9')
+                .attr('stroke-width', 1.7)
                 .attr('height', (d) => 450 - yMap(d))
                 .attr('fill', (d) => { 
                     if (d.Data == "Estimated") {
@@ -116,8 +126,8 @@
                     
                     seasonHeader.text("Season #" + d.Year)
                     
-                    divFields.html("Year: " + "<br/>" + "Episodes: " + "<br/>" + "Avg. Viewers (mil): " + "<br/>" + "Most Watched Episode: " + "<br/>" + "Viewers (mil): ")
-                    divValues.html(d.Year + "<br/>" + d.Episodes + "<br/>" + d["Avg. Viewers (mil)"] + "<br/>" + d["Most watched episode"] + "<br/>" + d["Viewers (mil)"])
+                    divFields.html("Year: " + "<br/>" + "Episodes: " + "<br/>" + "Avg. Viewers (mil): "+ "<br/>" + "<br/>" + "Most Watched Episode: " + "<br/>" + "Viewers (mil): ")
+                    divValues.html(d.Year + "<br/>" + d.Episodes + "<br/>" + d["Avg. Viewers (mil)"] + "<br/>" + "<br/>" + d["Most watched episode"] + "<br/>" + d["Viewers (mil)"])
             
                     div
                       .style("left", (d3.event.pageX) + "px")
@@ -133,27 +143,60 @@
     }
 
     function makeFilter() {
-      filterDiv = d3.select("#filter")
+      svgContainer.append('rect')
+        .attr('x', 585)
+        .attr('y', 70)
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('fill', '#70B8EB');
+
+
+      svgContainer.append('rect')
+        .attr('x', 585)
+        .attr('y', 90)
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('fill', '#adadad');
+
+      // filterDiv = svgContainer.append("div")
+      actual = svgContainer.append('text')
+        .attr('class', 'data-type')
+        .attr('x', 600)
+        .attr('y', 80)
+        .text('Actual');
+      
+      estimated = svgContainer.append('text')
+        .attr('class', 'data-type')
+        .attr('x', 600)
+        .attr('y', 100)
+        .text('Estimated');
+
       let lastClick = "";
-      filterDiv.selectAll(".data-type").on("click", function() {
+      svgContainer.selectAll(".data-type").on("click", function() {
 
         let dataType = this.textContent;
         console.log(dataType)
 
         if (lastClick == dataType) {
           lastClick = "";
-          svgContainer.selectAll("rect")
+          svgContainer.selectAll(".bar")
             .filter(function(d) {return dataType != d.Data;})
             .style("opacity", 1.0);
+
+            svgContainer.selectAll("." + dataType)
+              .style("opacity", 1.0)
         } else {
           lastClick = dataType
-          svgContainer.selectAll("rect")
+          svgContainer.selectAll(".bar")
             .filter(function(d) {return dataType != d.Data;})
             .style("opacity", 0.2);
       
-          svgContainer.selectAll("rect")
+          svgContainer.selectAll(".bar")
             .filter(function(d) {return dataType == d.Data;})
             .style("opacity", 1.0);
+
+          svgContainer.selectAll("." + dataType)
+            .style("opacity", 0.2)
         }
       });
     }
@@ -170,8 +213,8 @@
       // See here for more details:
       // https://www.tutorialsteacher.com/d3js/scales-in-d3
       let xScale = d3.scaleLinear()
-        .domain([limits.yearMin - 1, limits.yearMax])
-        .range([50, 750]);
+        .domain([limits.yearMin, limits.yearMax])
+        .range([70, 750]);
   
       // xMap returns a scaled x value from a row of data
       let xMap = function(d) { return xScale(xValue(d)); };
@@ -183,21 +226,20 @@
       let xAxis = d3.axisBottom()
         .scale(xScale)
         .ticks(18)
-        .tickFormat(d3.format("d"));
-
-      // xAxis.tickValues()
+        .tickFormat(d3.format("d"))
+        .tickSize(0);
   
       // TODO: use d3 append, attr, and call to append a "g" element to the svgContainer
       // variable and assign it a 'transform' attribute of 'translate(0, 450)' then
       // call the xAxis function
       // .attr('transform', 'translate(15, 300)rotate(-90)')
       svgContainer.append('g')
-        .attr('transform', 'translate(0, 450)')
+        .attr('transform', 'translate(-20, 450)')
         .call(xAxis)
         .selectAll("text")	
           .style("text-anchor", "end")
           .attr("dx", "-.8em")
-          .attr("dy", ".15em")
+          .attr("dy", "2em")
           .attr("transform", "rotate(-90)");
 
       // svgContainer.append('text')
@@ -219,9 +261,11 @@
       let yMap = function (d) { return yScale(yValue(d)); };
   
       // TODO: use axisLeft and scale to make the y-axis and assign it to yAxis
-      let yAxis = d3.axisLeft().scale(yScale);
+      let yAxis = d3.axisLeft().scale(yScale)
+        .tickSize(0)
+        .tickValues([0, 5, 10, 15, 20, 25, 30]);
       // yAxis.tickValues(_.range(0, 30))
-      yAxis.tickValues([0, 5, 10, 15, 20, 25, 30])
+      // yAxis.tickValues([0, 5, 10, 15, 20, 25, 30])
   
       // TODO: append a g element to the svgContainer
       // assign it a transform attribute of 'translate(50, 0)'

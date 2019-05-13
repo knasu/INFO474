@@ -17,9 +17,9 @@ div.tooltip {
 
 div.tooltip-fields {
     float: left;
-    height: 65px;
+    height: 75px;
     padding-right: 50px;
-    font: 12px sans-serif;
+    font: 10px sans-serif;
     color: gray;
     background: white;
     border: 0px;
@@ -31,8 +31,8 @@ div.tooltip-vals {
     float: right;
     top: 8px;
     right: 5px;
-    height: 65px;
-    font: 12px sans-serif;
+    height: 75px;
+    font: 10px sans-serif;
     color: black;
     background: white;
     border: 0px;
@@ -46,11 +46,8 @@ h3 {
 .viz-area {
     background-color: #FFEE3E;
     max-width: 900px;
+    height: 1000px;
 }
-
-/* rect {
-    fill: #70B8EB;
-} */
 
 .viz-area svg {
     background-color: white;
