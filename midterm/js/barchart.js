@@ -91,6 +91,7 @@
           .append('text')
             .attr('x', (d) => xMap(d) - barWidth/2)
             .attr('y', (d) => yMap(d) - 3)
+            .attr('font-size', 12)
             .text((d) => d["Avg. Viewers (mil)"]);
 
         svgContainer.selectAll('.dot')
@@ -183,10 +184,10 @@
         .attr('transform', 'translate(0, 450)')
         .call(xAxis);
 
-      svgContainer.append('text')
-        .attr('x', 400)
-        .attr('y', 500)
-        .text('Year');
+      // svgContainer.append('text')
+      //   .attr('x', 400)
+      //   .attr('y', 500)
+      //   .text('Year');
   
       // return Avg. Viewers from a row of data
       let yValue = function(d) { return +d["Avg. Viewers (mil)"];}
@@ -195,7 +196,7 @@
       // Use a range of [50, 450]
   
       let yScale = d3.scaleLinear()
-        .domain([limits.viewMax + 2, limits.viewMin - 0.05])
+        .domain([limits.viewMax + 2, 0])
         .range([50, 450]);
   
       // yMap returns a scaled y value from a row of data
@@ -203,6 +204,8 @@
   
       // TODO: use axisLeft and scale to make the y-axis and assign it to yAxis
       let yAxis = d3.axisLeft().scale(yScale);
+      // yAxis.tickValues(_.range(0, 30))
+      yAxis.tickValues([0, 5, 10, 15, 20, 25, 30])
   
       // TODO: append a g element to the svgContainer
       // assign it a transform attribute of 'translate(50, 0)'
