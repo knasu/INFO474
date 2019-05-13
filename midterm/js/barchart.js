@@ -181,9 +181,11 @@
       // See here for more details:
       // https://www.tutorialsteacher.com/d3js/axes-in-d3
       let xAxis = d3.axisBottom()
-        .scale(xScale);
+        .scale(xScale)
+        .ticks(18)
+        .tickFormat(d3.format("d"));
 
-      xAxis.tickValues()
+      // xAxis.tickValues()
   
       // TODO: use d3 append, attr, and call to append a "g" element to the svgContainer
       // variable and assign it a 'transform' attribute of 'translate(0, 450)' then
@@ -191,7 +193,12 @@
       // .attr('transform', 'translate(15, 300)rotate(-90)')
       svgContainer.append('g')
         .attr('transform', 'translate(0, 450)')
-        .call(xAxis);
+        .call(xAxis)
+        .selectAll("text")	
+          .style("text-anchor", "end")
+          .attr("dx", "-.8em")
+          .attr("dy", ".15em")
+          .attr("transform", "rotate(-90)");
 
       // svgContainer.append('text')
       //   .attr('x', 400)
