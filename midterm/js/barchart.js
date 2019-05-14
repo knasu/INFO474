@@ -8,15 +8,19 @@
     // load data and make scatter plot after window loads
     window.onload = function() {
       // TODO: use d3 select, append, and attr to append a 500x500 SVG to body
-      svgContainer = d3.select('body').select('div').append('svg')
+      
+      d3.select('.svg-area').append('p')
+        .html('<b>Despite a successful run of 26 seasons, ratings have dropped at a steady rate losing an average of 7.5% of viewers each year.</b>')
+      
+      d3.select('.svg-area').append('p')
+        .attr('class', 'subtitle')
+        .attr('style', 'background-color:#70B8EB')
+        .text('Average Viewership By Season');
+
+      svgContainer = d3.select('.svg-area').append('svg')
         .attr('width', 800)
         .attr('height', 500)
         .attr('class', 'svg');
-  
-    //   svgContainer.append('text')
-    //     .attr('x', 90)
-    //     .attr('y', 11)
-    //     .text('Week 3, Lecture 2: GRE Score vs Chance of Admit');
   
       // TODO: use d3.csv to load in Admission Predict data and then call the
       // makeScatterPlot function and pass it the data
@@ -39,107 +43,118 @@
       let axesLimits = findMinMax(year, avgViewers);
       console.log(axesLimits);
   
-      // TODO: go to drawTicks and fill it out below
       let mapFunctions = drawTicks(axesLimits);
-      console.log(mapFunctions);
-      // TODO: go to plotData function and fill it out
       plotData(mapFunctions);
 
-      makeFilter();
-  
-      // plot the trend line using gre scores, admit rates, axes limits, and
-      // scaling + mapping functions
-    //   plotTrendLine(year, avgViewers, axesLimits, mapFunctions);
-  
+      makeFilter(); 
     }
   
     // plot all the data points on the SVG
     function plotData(map) {
-        let xMap = map.x;
-        let yMap = map.y;
+      let xMap = map.x;
+      let yMap = map.y;
 
-        let barWidth = 22
+      let barWidth = 22
 
-        // make tooltip
-        let div = d3.select("body").append("div")
-            .attr("class", "tooltip")
-            .style("opacity", 0);
+      // make tooltip
+      let div = d3.select("body").append("div")
+          .attr("class", "tooltip")
+          .style("opacity", 0);
 
-        let seasonHeader = div.append("h3")
-          .attr('class', 'header')
+      let seasonHeader = div.append("h3")
+        .attr('class', 'header')
 
-        let divFields = div.append("div")
-            .attr('class', 'tooltip-fields')
+      let divFields = div.append("div")
+          .attr('class', 'tooltip-fields')
 
-        let divValues = div.append("div")
-            .attr('class', 'tooltip-vals')
-  
-        // append data to SVG and plot as points
-        // Use the selectAll, data, enter, append, and attr functions to plot all
-        // the data points. selectAll should be passed a parameter '.dot'
-        // data should be passed the global data variable as a parameter
-        // The points should have attributes:
-        // 'cx' -> xMap
-        // 'cy' -> yMap
-        // 'r' -> 3
-        // 'fill' -> #4286f4
-        // See here for more details:
-        // https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
-        svgContainer.selectAll('.dot')
-          .data(data)
-          .enter()
-          .append('text')
-            .attr('x', (d) => xMap(d) - barWidth/2)
-            .attr('y', (d) => yMap(d) - 3)
-            .attr('font-size', 12)
-            .attr('class', (d) => { 
+      let divValues = div.append("div")
+          .attr('class', 'tooltip-vals')
+
+      // append data to SVG and plot as points
+      // Use the selectAll, data, enter, append, and attr functions to plot all
+      // the data points. selectAll should be passed a parameter '.dot'
+      // data should be passed the global data variable as a parameter
+      // The points should have attributes:
+      // 'cx' -> xMap
+      // 'cy' -> yMap
+      // 'r' -> 3
+      // 'fill' -> #4286f4
+      // See here for more details:
+      // https://www.tutorialsteacher.com/d3js/data-binding-in-d3js
+
+      svgContainer.selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('text')
+          .attr('x', (d) => xMap(d) - barWidth/2)
+          .attr('y', (d) => yMap(d) - 3)
+          .attr('font-size', 12)
+          .attr('class', (d) => { 
+            if (d.Data == "Estimated") {
+              return 'Estimated'
+            } else {
+              return 'Actual'
+            }
+          })
+          .text((d) => d["Avg. Viewers (mil)"]);
+
+      svgContainer.selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('rect')
+          .attr('class', 'bar')
+          .attr('x', (d) => xMap(d) - barWidth/2)
+          .attr('y', yMap)
+          .attr('width', barWidth)
+          .attr('stroke', '#A9A9A9')
+          .attr('stroke-width', 1.7)
+          .attr('height', (d) => 450 - yMap(d))
+          .attr('fill', (d) => { 
               if (d.Data == "Estimated") {
-                return 'Estimated'
+                return '#898989'
               } else {
-                return 'Actual'
+                return '#70B8EB'
               }
             })
-            .text((d) => d["Avg. Viewers (mil)"]);
+          .on("mouseover", (d) => {
+              div.transition()
+                .duration(200)
+                .style("opacity", .9);
+              
+              seasonHeader.text("Season #" + d.Year)
+              
+              divFields.html("Year: " + "<br/>" + "Episodes: " + "<br/>" + "Avg. Viewers (mil): "+ "<br/>" + "<br/>" + "Most Watched Episode: " + "<br/>" + "Viewers (mil): ")
+              divValues.html(d.Year + "<br/>" + d.Episodes + "<br/>" + d["Avg. Viewers (mil)"] + "<br/>" + "<br/>" + d["Most watched episode"] + "<br/>" + d["Viewers (mil)"])
+      
+              div
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+      
+            })
+            .on("mouseout", (d) => {
+              div.transition()
+                .duration(500)
+                .style("opacity", 0);
+            });
 
-        svgContainer.selectAll('.bar')
-            .data(data)
-            .enter()
-            .append('rect')
-                .attr('class', 'bar')
-                .attr('x', (d) => xMap(d) - barWidth/2)
-                .attr('y', yMap)
-                .attr('width', barWidth)
-                .attr('stroke', '#A9A9A9')
-                .attr('stroke-width', 1.7)
-                .attr('height', (d) => 450 - yMap(d))
-                .attr('fill', (d) => { 
-                    if (d.Data == "Estimated") {
-                      return '#adadad'
-                    } else {
-                      return '#70B8EB'
-                    }
-                  })
-                .on("mouseover", (d) => {
-                    div.transition()
-                      .duration(200)
-                      .style("opacity", .9);
-                    
-                    seasonHeader.text("Season #" + d.Year)
-                    
-                    divFields.html("Year: " + "<br/>" + "Episodes: " + "<br/>" + "Avg. Viewers (mil): "+ "<br/>" + "<br/>" + "Most Watched Episode: " + "<br/>" + "Viewers (mil): ")
-                    divValues.html(d.Year + "<br/>" + d.Episodes + "<br/>" + d["Avg. Viewers (mil)"] + "<br/>" + "<br/>" + d["Most watched episode"] + "<br/>" + d["Viewers (mil)"])
-            
-                    div
-                      .style("left", (d3.event.pageX) + "px")
-                      .style("top", (d3.event.pageY - 28) + "px");
-            
-                  })
-                  .on("mouseout", (d) => {
-                    div.transition()
-                      .duration(500)
-                      .style("opacity", 0);
-                  });
-  
+      // svgContainer.append("path")
+      //   .attr("class", "line")
+      //   .style("stroke-dasharray", ("3, 3"))  // <== This line here!!
+      //   .attr('x1', 100)
+      //   .attr('y1', 100)
+      //   .attr('x2', 500)
+      //   .attr('y2', 500)
+      let lineGenerator = d3.line();
+      let points = [[50, 270], [765, 270]]
+      let pathData = lineGenerator(points);
+      svgContainer.append('path')
+        .attr("fill", "none")
+        .attr("stroke", "#adadad")
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-width", 1.5)
+        .style("stroke-dasharray", ("5, 3"))
+        .attr('d', pathData);
     }
 
     function makeFilter() {

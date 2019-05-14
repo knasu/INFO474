@@ -46,9 +46,28 @@ h3 {
 .viz-area {
     background-color: #FFEE3E;
     max-width: 900px;
-    height: 1000px;
+    height: 680px;
+    margin-top: 100px;
+    margin-left: 50px;
 }
 
-.viz-area svg {
+.svg-area {
+    margin-left: 50px;
+}
+
+svg {
     background-color: white;
+}
+
+.subtitle {
+    margin-bottom: 5px;
+    margin-right: 50px;
+    padding-left: 5px;
+    color: white;
+    font-weight: bold;
+    font-style: italic;
+}
+
+body {
+    font-family: Calibri;
 }
