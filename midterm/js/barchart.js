@@ -137,13 +137,6 @@
                 .style("opacity", 0);
             });
 
-      // svgContainer.append("path")
-      //   .attr("class", "line")
-      //   .style("stroke-dasharray", ("3, 3"))  // <== This line here!!
-      //   .attr('x1', 100)
-      //   .attr('y1', 100)
-      //   .attr('x2', 500)
-      //   .attr('y2', 500)
       let lineGenerator = d3.line();
       let points = [[50, 270], [765, 270]]
       let pathData = lineGenerator(points);
@@ -155,6 +148,20 @@
         .attr("stroke-width", 1.5)
         .style("stroke-dasharray", ("5, 3"))
         .attr('d', pathData);
+
+      svgContainer.append('rect')
+        .attr('x', 52)
+        .attr('y', 245)
+        .attr('width', 29)
+        .attr('height', 20)
+        .attr('fill', '#ffffff')
+        .attr('opacity', '0.7');
+
+      svgContainer.append('text')
+        .attr('x', 52)
+        .attr('y', 260)
+        .attr('font-size', 15)
+        .text('13.5')
     }
 
     function makeFilter() {
@@ -291,7 +298,7 @@
   
       svgContainer.append('text')
         .attr('transform', 'translate(15, 300)rotate(-90)')
-        .text('Viewers (mil)');
+        .text('Avg. Viewers (in millions)');
       // return mapping and scaling functions
       return {
         x: xMap,
