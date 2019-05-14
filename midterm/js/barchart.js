@@ -212,8 +212,8 @@
             .filter(function(d) {return dataType != d.Data;})
             .style("opacity", 1.0);
 
-            svgContainer.selectAll("." + dataType)
-              .style("opacity", 1.0)
+            // svgContainer.selectAll("." + dataType)
+            //   .style("opacity", 1.0)
         } else {
           lastClick = dataType
           svgContainer.selectAll(".bar")
@@ -224,8 +224,8 @@
             .filter(function(d) {return dataType == d.Data;})
             .style("opacity", 1.0);
 
-          svgContainer.selectAll("." + dataType)
-            .style("opacity", 0.2)
+          // svgContainer.selectAll("." + dataType)
+          //   .style("opacity", 0.2)
         }
       });
     }
