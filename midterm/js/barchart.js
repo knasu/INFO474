@@ -180,7 +180,14 @@
         .attr('height', 10)
         .attr('fill', '#adadad');
 
-      // filterDiv = svgContainer.append("div")
+      
+      svgContainer.append('text')
+        .attr('class', 'key-title')
+        .attr('x', 583)
+        .attr('y', 57)
+        .attr('font-weight', 'bold')
+        .text('Viewership Data')
+
       actual = svgContainer.append('text')
         .attr('class', 'data-type')
         .attr('x', 600)
