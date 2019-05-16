@@ -72,3 +72,7 @@ text.axis-container {
 text.axis-scatter {
     font-size: 7pt;
 }
+
+.scatter g {
+    font-size: 5pt;
+}

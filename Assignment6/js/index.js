@@ -6,7 +6,9 @@
   let svgContainer = "";
   let svgScatterPlot = "";
   let svgContainerDim = 500;
-  let svgScatterDim = 250
+  let svgContainerMargin = 50;
+  let svgScatterMargin = 40;
+  let svgScatterDim = 260;
 
   // load data and make scatter plot after window loads
   window.onload = function() {
@@ -23,7 +25,7 @@
     d3.csv("./data/dataEveryYear.csv")
       .then((result) => {
         allYearsData = result
-        makeLineGraph("AUS")
+        makeLineGraph("CHN")
       });
   }
 
@@ -36,7 +38,7 @@
     let axesLimits = findMinMax(time_data, pop_data);
 
     // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "time", "pop_mlns", svgContainer, {min: 50, max: 450}, {min: 50, max: 450});
+    let mapFunctions = drawAxes(axesLimits, "time", "pop_mlns", svgContainer, {min: svgContainerMargin, max: svgContainerDim-svgContainerMargin}, {min: svgContainerMargin, max: svgContainerDim-svgContainerMargin});
 
     let countryArray = d3.map(allYearsData, function(d){return d.location;}).keys().sort()
 
@@ -51,7 +53,7 @@
       .attr("display", "inline");
 
     // draw title and axes labels
-    makeLabels(svgContainer, 'axis-container', 'Time (years)', 'Population (millions)', svgContainerDim*0.4, svgContainerDim*0.6);
+    makeLabels(svgContainer, 'axis-container', 'Time (years)', 'Population (millions)', svgContainerDim, svgContainerDim);
 
     d3.select('svg').append('text')
       .attr('class', 'country')
@@ -72,8 +74,6 @@
     
     dropDownDiv.append("select")
       .attr("name", "dropdown");
-    
-    // let countryArray = d3.map(allYearsData, function(d){return d.location;}).keys().sort()
 
     var options = dropDownDiv.select("select").selectAll("options")
       .data(countries)
@@ -100,15 +100,18 @@
 
   // make title and axes labels
   function makeLabels(svg, className, xLabel, yLabel, x, y) {
+    let xScaled = x*0.4
+    let yScaled = y*0.6
+
     svg.append('text')
       .attr('class', className)
-      .attr('x', x)
-      .attr('y', x+y)
+      .attr('x', xScaled)
+      .attr('y', y-(yScaled*0.04))
       .text(xLabel);
 
     svg.append('text')
       .attr('class', className)
-      .attr('transform', 'translate(15, ' + y + ')rotate(-90)')
+      .attr('transform', 'translate(15, ' + yScaled + ')rotate(-90)')
       .text(yLabel);
   }
 
@@ -166,17 +169,21 @@
     svgScatterPlot.html("")
       .attr('class', 'scatter');
 
+    svgScatterPlot.append('text')
+      // .attr('class', 'title')
+      .text("Fertility Rate vs. Life Expectancy");
+
     let fertility_rate_data = allYearsData.map((row) => parseFloat(row["fertility_rate"]));
     let life_expectancy_data = allYearsData.map((row) => parseFloat(row["life_expectancy"]));
 
     let axesLimits = findMinMax(fertility_rate_data, life_expectancy_data);
 
     // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "fertility_rate", "life_expectancy", svgScatterPlot, {min: 50, max: 230}, {min: 40, max: 230});
+    let mapFunctions = drawAxes(axesLimits, "fertility_rate", "life_expectancy", svgScatterPlot, {min: svgScatterMargin, max: svgScatterDim-svgScatterMargin}, {min: svgScatterMargin, max: svgScatterDim-svgScatterMargin});
     let xMap = mapFunctions.x;
     let yMap = mapFunctions.y;
 
-    makeLabels(svgScatterPlot, 'axis-scatter', 'Fertility Rate', 'Life Expectancy', svgScatterDim*0.4, svgScatterDim*0.6);
+    makeLabels(svgScatterPlot, 'axis-scatter', 'Fertility Rate', 'Life Expectancy', svgScatterDim, svgScatterDim);
 
     svgScatterPlot.selectAll('.dot')
       .data(allYearsData)
@@ -185,7 +192,6 @@
         .attr('cx', xMap)
         .attr('cy', yMap)
         .attr('r', 1)
-        // .attr('r', (d) => pop_map_func(d["pop_mlns"]))
         .attr('fill', "#4286f4");
   }
 
@@ -200,7 +206,7 @@
     let xValue = function(d) { return +d[x]; }
 
     if (svg.attr('class') == 'scatter') {
-      xMin = 40
+      xMin = 40;
     }
 
     // function to scale x value
@@ -228,7 +234,7 @@
 
     // function to scale y
     let yScale = d3.scaleLinear()
-      .domain([limits.yMax + 5, 0]) // give domain buffer
+      .domain([limits.yMax + 5, limits.yMin]) // give domain buffer
       .range([yMin, yMax]);
 
     // yMap returns a scaled y value from a row of data
