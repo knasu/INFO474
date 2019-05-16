@@ -115,8 +115,6 @@
       .text(yLabel);
   }
 
-  // plot all the data points on the SVG
-  // and add tooltip functionality
   function plotData(map, countries) {
     // mapping functions
     let xMap = map.x;
@@ -148,7 +146,6 @@
         .attr("stroke-width", 4)
         .attr("d", line)
         .on("mouseover", (d) => {
-          console.log(d[0].location)
           div.transition()
             .duration(200)
             .style("opacity", .9)
@@ -281,10 +278,4 @@
       yMax : yMax
     }
   }
-
-  // format numbers
-  function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
 })();
