@@ -170,7 +170,9 @@
       .attr('class', 'scatter');
 
     svgScatterPlot.append('text')
-      // .attr('class', 'title')
+      .attr('y', svgScatterMargin/2)
+      .attr('x', svgScatterDim/2 - 2*svgScatterMargin)
+      .attr('font-size', '8pt')
       .text("Fertility Rate vs. Life Expectancy");
 
     let fertility_rate_data = allYearsData.map((row) => parseFloat(row["fertility_rate"]));
