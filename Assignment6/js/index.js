@@ -25,7 +25,7 @@
     d3.csv("./data/dataEveryYear.csv")
       .then((result) => {
         allYearsData = result
-        makeLineGraph("CHN")
+        makeLineGraph("AUS")
       });
   }
 
