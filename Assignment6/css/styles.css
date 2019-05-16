@@ -20,29 +20,11 @@ div.tooltip {
     width: 260px;
     height: 260px;
     font: 8px sans-serif;
-    background: lightsteelblue;
-    border: 0px;
+    background: white;
+    border: solid lightslategrey 1px;
     border-radius: 8px;
     pointer-events: none;
 }
-
-/* svg.scatter {
-    font: 8px sans-serif;
-} */
-/* 
-div.tooltip {
-    box-shadow: 2px 2px 5px grey;
-    position: absolute;
-    text-align: left;
-    width: 150px;
-    height: 70px;
-    padding: 8px;
-    font: 12px sans-serif;
-    background: white;
-    border: 0px;
-    border-radius: 2px;
-    pointer-events: none;
-} */
 
 .dropdown-div {
     position: absolute;

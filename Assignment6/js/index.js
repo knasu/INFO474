@@ -140,7 +140,7 @@
         .datum(countryData)
         .attr('class', countries[i] + " line")
         .attr("fill", "none")
-        .attr("stroke", "steelblue")
+        .attr("stroke", "#4e79a7")
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
         .attr("stroke-width", 4)
@@ -148,7 +148,7 @@
         .on("mouseover", (d) => {
           div.transition()
             .duration(200)
-            .style("opacity", .9)
+            .style("opacity", 1)
             .style("left", (d3.event.pageX) + "px")
             .style("top", (d3.event.pageY - 28) + "px");
 
@@ -191,7 +191,8 @@
         .attr('cx', xMap)
         .attr('cy', yMap)
         .attr('r', 1)
-        .attr('fill', "#4286f4");
+        .attr('opacity', '0.8')
+        .attr('fill', "#4e79a7");
   }
 
   // draw the axes and ticks
