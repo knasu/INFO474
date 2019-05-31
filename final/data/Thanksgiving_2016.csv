@@ -1,0 +1,7 @@
+Date,Origin Movement ID,Origin Display Name,Destination Movement ID,Destination Display Name,Daily Mean Travel Time (Seconds),Daily Range - Lower Bound Travel Time (Seconds),Daily Range - Upper Bound Travel Time (Seconds),AM Mean Travel Time (Seconds),AM Range - Lower Bound Travel Time (Seconds),AM Range - Upper Bound Travel Time (Seconds),PM Mean Travel Time (Seconds),PM Range - Lower Bound Travel Time (Seconds),PM Range - Upper Bound Travel Time (Seconds),Midday Mean Travel Time (Seconds),Midday Range - Lower Bound Travel Time (Seconds),Midday Range - Upper Bound Travel Time (Seconds),Evening Mean Travel Time (Seconds),Evening Range - Lower Bound Travel Time (Seconds),Evening Range - Upper Bound Travel Time (Seconds),Early Morning Mean Travel Time (Seconds),Early Morning Range - Lower Bound Travel Time (Seconds),Early Morning Range - Upper Bound Travel Time (Seconds)
+11/22/2016,305,Census Tract 53.01,321,Census Tract 284.02,2172,1499,3147,1635,1370,1953,3557,2816,4493,2135,1558,2926,2441,1969,3027,1445,1190,1755
+11/23/2016,305,Census Tract 53.01,321,Census Tract 284.02,1902,1374,2634,1529,1274,1835,2607,2005,3390,2247,1674,3015,2107,1593,2787,1484,1212,1818
+11/24/2016,305,Census Tract 53.01,321,Census Tract 284.02,1528,1264,1848,1470,1229,1757,,,,1468,1263,1708,,,,1565,1278,1917
+,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,
+,,,,,1867.333333,1379,2543,1544.666667,1291,1848.333333,3082,2410.5,3941.5,1950,1498.333333,2549.666667,2274,1781,2907,1498,1226.666667,1830
