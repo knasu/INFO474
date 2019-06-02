@@ -4,11 +4,9 @@
 
   let data = "no data";
   let svgContainer = "";
-  // let svgScatterPlot = "";
+  let svgScatterPlot = "";
   let width = 900;
   let height = 500;
-  // let svgContainerDim = 500;
-  // let svgContainerWidth = 
   let svgContainerMargin = 50;
   // let svgScatterMargin = 40;
   // let svgScatterDim = 260;
@@ -34,7 +32,7 @@
 
   function makeBarGraph(year) {
     // get arrays of fertility rate data and life Expectancy data
-    let travelTime_data = data.map((row) => parseFloat(row["Daily Mean Travel Time (Seconds)"]));
+    let travelTime_data = data.map((row) => parseFloat(row["Daily Mean Travel Time (Minutes)"]));
     // let holiday_data = data.map((row) => row["Holiday"]);
     let holiday_data = d3.map(data, function(d){return d.Holiday;}).keys()
 
@@ -43,7 +41,7 @@
     console.log(axesLimits)
 
     // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "Holiday", "Daily Mean Travel Time (Seconds)", {min: svgContainerMargin, max: height-svgContainerMargin}, {min: svgContainerMargin, max: height-svgContainerMargin});
+    let mapFunctions = drawAxes(axesLimits, "Holiday", "Daily Mean Travel Time (Minutes)", {min: svgContainerMargin, max: height-svgContainerMargin}, {min: svgContainerMargin, max: height-svgContainerMargin});
 
     
     let years = d3.map(data, function(d){return d.Year;}).keys().sort()
@@ -53,21 +51,24 @@
     plotData(mapFunctions, years);
     
     makeDropdown(years);
+    
+    svgContainer.selectAll('rect')
+      .attr('display', function(d) {
+        if (year == d.Year) {
+          return 'inline'
+        } else {
+          return 'none'
+        }
+      });
 
-    svgContainer.selectAll("rect")
-      .filter(function(d) {return +year == d.Year;})
-      .attr("display", "inline");
-
-    svgContainer.selectAll("rect")
-      .filter(function(d) {return +year != d.Year;})
-      .attr("display", "none");
-
-    // svgContainer.selectAll("rect")
-    //   .attr("display", "none");
-
-    // svgContainer.select("rect." + year)
-    //   .attr("display", "inline");
-
+    svgContainer.selectAll('text.year')
+      .attr('display', function(d) {
+        if (year == d.Year) {
+          return 'inline'
+        } else {
+          return 'none'
+        }
+      });
     
     // draw title and axes labels
     makeLabels(svgContainer, 'axis-container', 'Holiday', 'Travel Time (minutes)', width, height);
@@ -106,16 +107,23 @@
     dropDownDiv.select("select").on("change", function() {
       var selected = this.value;
 
-      svgContainer.selectAll("rect")
-        .filter(function(d) {return +selected == d.Year;})
-        .attr("display", "inline");
+      svgContainer.selectAll('rect')
+      .attr('display', function(d) {
+        if (+selected == d.Year) {
+          return 'inline'
+        } else {
+          return 'none'
+        }
+      });
 
-      svgContainer.selectAll("rect")
-        .filter(function(d) {return +selected != d.Year;})
-        .attr("display", "none");
-
-      // svgContainer.select("text.year")
-      //   .text(selected)
+      svgContainer.selectAll('text.year')
+        .attr('display', function(d) {
+          if (+selected == d.Year) {
+            return 'inline'
+          } else {
+            return 'none'
+          }
+        });
     });
   }
 
@@ -159,11 +167,44 @@
       let yearData = data.filter((row) => row["Year"] == years[i]);
       console.log(yearData)
 
+      // svgContainer.selectAll('.bar')
+      //   .data(data)
+      //   .enter()
+      //   .append('text')
+      //     .attr('x', (d) => xMap(d) - barWidth/2)
+      //     .attr('y', (d) => yMap(d) - 3)
+      //     .attr('font-size', 12)
+      //     .attr('class', (d) => { 
+      //       if (d.Year == '2016') {
+      //         return '2016'
+      //       } else {
+      //         return '2017'
+      //       }
+      //     })
+      //     .text((d) => d["Daily Mean Travel Time (Minutes)"]);
+
+      svgContainer.selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('text')
+            // .attr('x', (d) => +xMap(d.Holiday)+20)
+            .attr('transform', function(d) { return "translate(" + (+xMap(d.Holiday)+10) + ",0)"; })
+            .attr('y', (d) => yMap(d) - 3)
+            .attr('font-size', 12)
+            .attr('class', (d) => { 
+              if (d.Year == '2016') {
+                return '2016 year'
+              } else {
+                return '2017 year'
+              }
+            })
+            .text((d) => d["Daily Mean Travel Time (Minutes)"]);
+      
       svgContainer.selectAll('.bar')
         .data(data)
         .enter()
         .append('rect')
-          .attr("transform", function(d) { return "translate(" + (+xMap(d.Holiday)+20) + ",0)"; })
+          .attr('transform', function(d) { return "translate(" + (+xMap(d.Holiday)+20) + ",0)"; })
           .attr('y', yMap)
           .attr('class', 'bar ' + years[i])
           .attr('width', barWidth)
@@ -179,6 +220,8 @@
           //   }
           // })
           .attr('fill', '#1B7CEB');
+        
+
 
 
       // svgContainer.append('path')
@@ -286,7 +329,7 @@
 
     // function to scale y
     let yScale = d3.scaleLinear()
-      .domain([limits.yMax + 5, limits.yMin]) // give domain buffer
+      .domain([limits.yMax + 5, 0]) // give domain buffer
       .range([yMin, yMax]);
 
     // yMap returns a scaled y value from a row of data
