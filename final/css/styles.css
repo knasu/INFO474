@@ -17,8 +17,8 @@ path {
 div.tooltip {
     position: absolute;
     text-align: center;
-    width: 260px;
-    height: 260px;
+    /* width: 260px;
+    height: 260px; */
     font: 8px sans-serif;
     background: white;
     border: solid lightslategrey 1px;
