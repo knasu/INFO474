@@ -38,7 +38,6 @@
   }
 
   function makeBarGraph(year) {
-    // get arrays of fertility rate data and life Expectancy data
     let travelTime_data = data.map((row) => parseFloat(row["Daily Mean Travel Time (Minutes)"]));
     // let holiday_data = data.map((row) => row["Holiday"]);
     let holiday_data = d3.map(data, function(d){return d.Holiday;}).keys()
@@ -207,6 +206,25 @@
 
   function makeTooltipPlot(d) {
 
+    let amData = data.map((row) => parseFloat(row.AM));
+    let middayData = data.map((row) => parseFloat(row.PM));
+    let pmData = data.map((row) => parseFloat(row.Midday));
+    let eveningData = data.map((row) => parseFloat(row.Evening));
+    let earlyMorningData = data.map((row) => parseFloat(row['Early Morning']));
+
+    let allTooltipData = [amData, middayData, pmData, eveningData, earlyMorningData]
+    let max = 0;
+
+    for (let i = 0; i < allTooltipData.length; i++) {
+      let maxTemp = d3.max(allTooltipData[i])
+      console.log(allTooltipData[i].length)
+      if (maxTemp > max) {
+        max = maxTemp;
+      }
+    }
+    console.log(max)
+
+
     let tooltipData = {
       key : d.Holiday,
       values : [d.AM, d.Midday, d.PM, d.Evening, d['Early Morning']]
@@ -224,13 +242,18 @@
 
     let xLabels = ['AM', 'Midday', 'PM', 'Evening', 'Early Morning']
 
-    let axesLimits = findMinMax(xLabels, tooltipData.values)
-    console.log(axesLimits)
+    // let axesLimits = findMinMax(xLabels, tooltipData.values)
+    // console.log(axesLimits)
+    let axesLimits = {
+      xArray : xLabels,
+      yMin : 0,
+      yMax : max
+    }
 
     // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "life_expectancy", svgTooltip, {min: svgTooltip.margin, max: svgTooltip.width-svgTooltip.margin}, {min: svgTooltip.margin, max: svgTooltip.height-svgTooltip.margin});
+    drawAxes(axesLimits, "", svgTooltip, {min: svgTooltip.margin, max: svgTooltip.width-svgTooltip.margin}, {min: svgTooltip.margin, max: svgTooltip.height-svgTooltip.margin});
     let xMap = d3.scaleBand().domain(xLabels).rangeRound([svgTooltip.margin, svgTooltip.width]).padding(0.3);
-    let yMap = d3.scaleLinear().domain([0, d3.max(tooltipData.values)]).rangeRound([svgTooltip.height-svgTooltip.margin, svgTooltip.margin]);
+    let yMap = d3.scaleLinear().domain([0, max]).rangeRound([svgTooltip.height-svgTooltip.margin, svgTooltip.margin]);
     // let xMap = mapFunctions.x
     // let yMap = mapFunctions.y
 
@@ -265,7 +288,7 @@
       .enter()
       .append('circle')
       .attr('class', 'circle')
-      .attr('fill', '#ffffff')
+      .attr('fill', '#4e79a7')
       .attr('cx', function(d,i) {return xMap(xLabels[i])})
       .attr('cy', function(d) { return +yMap(d)})
       .attr('r', 4);
