@@ -68,19 +68,19 @@
     // svgContainer.select("rect." + year)
     //   .attr("display", "inline");
 
-    /*
+    
     // draw title and axes labels
-    makeLabels(svgContainer, 'axis-container', 'Time (years)', 'Population (millions)', svgContainerDim, svgContainerDim);
+    makeLabels(svgContainer, 'axis-container', 'Holiday', 'Travel Time (minutes)', width, height);
 
-    d3.select('svg').append('text')
-      .attr('class', 'year')
-      .attr('font-weight', 'bold')
-      .attr('x', 75)
-      .attr('y', 420)
-      .attr('fill', '#737373')
-      .style('font-size', '24pt')
-      .text(year)
-    */
+    // d3.select('svg').append('text')
+    //   .attr('class', 'year')
+    //   .attr('font-weight', 'bold')
+    //   .attr('x', 75)
+    //   .attr('y', 420)
+    //   .attr('fill', '#737373')
+    //   .style('font-size', '24pt')
+      // .text(year)
+    
   }
 
   function makeDropdown(years) {    
