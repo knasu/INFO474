@@ -258,6 +258,17 @@
       //   return color(i);
       // })
       .attr("fill","none");
+
+
+    g.selectAll('circle')
+      .data(tooltipData.values)
+      .enter()
+      .append('circle')
+      .attr('class', 'circle')
+      .attr('fill', '#ffffff')
+      .attr('cx', function(d,i) {return xMap(xLabels[i])})
+      .attr('cy', function(d) { return +yMap(d)})
+      .attr('r', 4);
   }
 
   // draw the axes and ticks
