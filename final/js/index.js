@@ -3,11 +3,28 @@
 (function() {
 
   let data = "no data";
-  let svgContainer = "";
-  let svgScatterPlot = "";
-  let width = 900;
-  let height = 500;
-  let svgContainerMargin = 50;
+  // let svgContainer = "";
+  // let svgTooltip = "";
+  // let width = 900;
+  // let height = 500;
+  // let svgContainerMargin = 50;
+  // let svgTooltipDim = 270;
+  // let svgTooltipMargin = 30;
+
+  let svgContainer = {
+    svg: "",
+    width: 900,
+    height: 500,
+    margin: 50
+  }
+
+  let svgTooltip = {
+    svg: "",
+    height: 270,
+    width: 270,
+    margin: 30
+  }
+
   // let svgScatterMargin = 40;
   // let svgScatterDim = 260;
 
@@ -17,11 +34,11 @@
       .attr('class', 'title')
       .text("Travel Times from UW to SeaTac Airport Leading up to Holidays");
 
-    svgContainer = d3.select('body')
+    svgContainer.svg = d3.select('body')
       .append('svg')
         .attr('class', 'container')
-        .attr('width', width)
-        .attr('height', height);
+        .attr('width', svgContainer.width)
+        .attr('height', svgContainer.height);
       
     d3.csv("./data/Averages.csv")
       .then((result) => {
@@ -41,7 +58,7 @@
     console.log(axesLimits)
 
     // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "Holiday", "Daily Mean Travel Time (Minutes)", {min: svgContainerMargin, max: height-svgContainerMargin}, {min: svgContainerMargin, max: height-svgContainerMargin});
+    let mapFunctions = drawAxes(axesLimits, "Holiday", "Daily Mean Travel Time (Minutes)", svgContainer, {min: svgContainer.margin, max: svgContainer.height-svgContainer.margin}, {min: svgContainer.margin, max: svgContainer.height-svgContainer.margin});
 
     
     let years = d3.map(data, function(d){return d.Year;}).keys().sort()
@@ -52,7 +69,7 @@
     
     makeDropdown(years);
     
-    svgContainer.selectAll('rect')
+    svgContainer.svg.selectAll('rect')
       .attr('display', function(d) {
         if (year == d.Year) {
           return 'inline'
@@ -61,27 +78,17 @@
         }
       });
 
-    svgContainer.selectAll('text.year')
-      .attr('display', function(d) {
-        if (year == d.Year) {
-          return 'inline'
-        } else {
-          return 'none'
-        }
-      });
+    svgContainer.svg.selectAll('text.year')
+    .attr('display', function(d) {
+      if (year == d.Year) {
+        return 'inline'
+      } else {
+        return 'none'
+      }
+    });
     
     // draw title and axes labels
-    makeLabels(svgContainer, 'axis-container', 'Holiday', 'Travel Time (minutes)', width, height);
-
-    // d3.select('svg').append('text')
-    //   .attr('class', 'year')
-    //   .attr('font-weight', 'bold')
-    //   .attr('x', 75)
-    //   .attr('y', 420)
-    //   .attr('fill', '#737373')
-    //   .style('font-size', '24pt')
-      // .text(year)
-    
+    makeLabels(svgContainer.svg, 'axis-container', 'Holiday', 'Travel Time (minutes)', svgContainer.width, svgContainer.height);   
   }
 
   function makeDropdown(years) {    
@@ -107,7 +114,7 @@
     dropDownDiv.select("select").on("change", function() {
       var selected = this.value;
 
-      svgContainer.selectAll('rect')
+      svgContainer.svg.selectAll('rect')
       .attr('display', function(d) {
         if (+selected == d.Year) {
           return 'inline'
@@ -116,7 +123,7 @@
         }
       });
 
-      svgContainer.selectAll('text.year')
+      svgContainer.svg.selectAll('text.year')
         .attr('display', function(d) {
           if (+selected == d.Year) {
             return 'inline'
@@ -151,44 +158,23 @@
     let barWidth = 30;
 
     // make tooltip
-    // let div = d3.select("body").append("div")
-    //   .attr("class", "tooltip")
-    //   .style("opacity", 0);
+    let div = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
 
-    // svgScatterPlot = div.append('svg')
-    //   .attr('width', svgScatterDim)
-    //   .attr('height', svgScatterDim);
-
-    // let line = d3.line()
-    //   .x((d) => xMap(d))
-    //   .y((d) => yMap(d));
+    svgTooltip.svg = div.append('svg')
+      .attr('width', svgTooltip.width)
+      .attr('height', svgTooltip.height);
 
     for (let i = 0; i < years.length; i++) {
       let yearData = data.filter((row) => row["Year"] == years[i]);
       console.log(yearData)
 
-      // svgContainer.selectAll('.bar')
-      //   .data(data)
-      //   .enter()
-      //   .append('text')
-      //     .attr('x', (d) => xMap(d) - barWidth/2)
-      //     .attr('y', (d) => yMap(d) - 3)
-      //     .attr('font-size', 12)
-      //     .attr('class', (d) => { 
-      //       if (d.Year == '2016') {
-      //         return '2016'
-      //       } else {
-      //         return '2017'
-      //       }
-      //     })
-      //     .text((d) => d["Daily Mean Travel Time (Minutes)"]);
-
-      svgContainer.selectAll('.bar')
+      svgContainer.svg.selectAll('.bar')
         .data(data)
         .enter()
         .append('text')
-            // .attr('x', (d) => +xMap(d.Holiday)+20)
-            .attr('transform', function(d) { return "translate(" + (+xMap(d.Holiday)+10) + ",0)"; })
+            .attr('x', (d) => +xMap(d.Holiday)+20)
             .attr('y', (d) => yMap(d) - 3)
             .attr('font-size', 12)
             .attr('class', (d) => { 
@@ -200,11 +186,11 @@
             })
             .text((d) => d["Daily Mean Travel Time (Minutes)"]);
       
-      svgContainer.selectAll('.bar')
+      svgContainer.svg.selectAll('.bar')
         .data(data)
         .enter()
         .append('rect')
-          .attr('transform', function(d) { return "translate(" + (+xMap(d.Holiday)+20) + ",0)"; })
+          .attr('x', (d) => +xMap(d.Holiday)+20)
           .attr('y', yMap)
           .attr('class', 'bar ' + years[i])
           .attr('width', barWidth)
@@ -212,87 +198,178 @@
           .attr('stroke-width', 1.9)
           .attr('height', (d) => 450 - yMap(d))
           .attr('display', 'inline')
-          // .attr('display', (d) => {
-          //   if (d.Year == '2017') {
-          //     return 'none'
-          //   } else {
-          //     return 'inline'
-          //   }
-          // })
-          .attr('fill', '#1B7CEB');
-        
-
-
-
-      // svgContainer.append('path')
-      //   .datum(yearData)
-      //   .attr('class', years[i] + " line")
-      //   .attr("fill", "none")
-      //   .attr("stroke", "#4e79a7")
-      //   .attr("stroke-linejoin", "round")
-      //   .attr("stroke-linecap", "round")
-      //   .attr("stroke-width", 4)
-      //   .attr("d", line)
-        // .on("mouseover", (d) => {
-        //   div.transition()
-        //     .duration(200)
-        //     .style("opacity", 1)
-        //     .style("left", (d3.event.pageX) + "px")
-        //     .style("top", (d3.event.pageY - 28) + "px");
-
-          // makeScatterPlot();
-        // })
-        // .on("mouseout", (d) => {
-        //   div.transition()
-        //     .duration(500)
-        //     .style("opacity", 0);
-        // });
+          .attr('fill', '#1B7CEB')
+          .on('mouseover', (d) => {
+            div.transition()
+              .duration(200)
+              .style('opacity', 1)
+              .style('left', (d3.event.pageX) + 'px')
+              .style('top', (d3.event.pageY - 28) + 'px');
+            makeTooltipPlot(d);
+          })
+          .on('mouseout', (d) => {
+            div.transition()
+              .duration(500)
+              .style('opacity', 0);
+          });
     }
   }
 
-  function makeScatterPlot() {
-    svgScatterPlot.html("")
-      .attr('class', 'scatter');
+  function makeTooltipPlot(d) {
+    // AM, Midday, PM, Evening, Early Morning
+    // let tooltipData = {
+    //   holiday : barData.Holiday,
+    //   year : barData.Year,
+    //   x : ['AM', 'Midday', 'PM', 'Evening', 'Early Morning'],
+    //   y : [barData.AM, barData.Midday, barData.PM, barData.Evening, barData['Early Morning']],
+    //   am : barData.AM,
+    //   midday : barData.Midday,
+    //   pm : barData.PM,
+    //   evening : barData.Evening,
+    //   earlyMorning : barData['Early Morning']
+    // }
 
-    svgScatterPlot.append('text')
-      .attr('y', svgScatterMargin/2)
-      .attr('x', svgScatterDim/2 - 2*svgScatterMargin)
+    let tooltipData = {
+      key : d.Holiday,
+      values : [d.AM, d.Midday, d.PM, d.Evening, d['Early Morning']]
+    }
+
+    console.log(tooltipData)
+
+    svgTooltip.svg.html("")
+      // .attr('class', 'line-graph');
+
+    // svgTooltip.append('text')
+    //   .attr('y', svgTooltipMargin)
+    //   .attr('x', svgTooltipDim/2 - 2*svgTooltipMargin)
+    //   .attr('font-size', '8pt')
+    //   .text("Average Travel Times by Period for " + tooltipData.holiday + " " + tooltipData.year);
+
+    let xLabels = ['AM', 'Midday', 'PM', 'Evening', 'Early Morning']
+    let x = d3.scaleBand().domain(xLabels).rangeRound([0, svgTooltip.width]).padding(0.1);
+    let y = d3.scaleLinear().domain([0, d3.max(tooltipData.values)]).rangeRound([svgTooltip.height, 0]);
+
+    let axesLimits = findMinMax(xLabels, tooltipData.values)
+    console.log(axesLimits)
+
+    // draw axes and return scaling + mapping functions
+    let mapFunctions = drawAxes(axesLimits, "fertility_rate", "life_expectancy", svgTooltip, {min: svgTooltip.margin, max: svgTooltip.width-svgTooltip.margin}, {min: svgTooltip.margin, max: svgTooltip.height-svgTooltip.margin});
+
+    makeLabels(svgTooltip.svg, 'line-graph', 'Time of Day', 'Average Travel Time (Minutes)', svgTooltip.width, svgTooltip.height);
+
+    let line = d3.line()
+      .x(function(d,i) { return x(xLabels[i])})
+      .y(function(d,i) { return y(d)});
+
+    // var color = d3.scale.category10();
+
+    var g = svgTooltip.svg.selectAll(".lineGroup")
+      .data(data)
+      .enter().append("g")
+      .attr("class", "lineGroup " + tooltipData.key);
+
+    g.append("path")
+      .attr("class", "line")
+      .attr("d", line(tooltipData.values))
+      .style('stroke', '#1B7CEB')
+      // .style("stroke", function(d,i) {
+      //   return color(i);
+      // })
+      .attr("fill","none");
+    
+      // var g = svgTooltip.append("g")
+    //   .attr("transform", "translate(" + svgTooltipMargin + "," + svgTooltipMargin + ")");
+    
+    // var line = d3.line()
+    //   .x(function(d) { return x(tooltipData.x); })
+    //   .y(function(d) { return y(tooltipData.frequency); })
+  
+    // x.domain(data.map(function(d) { return d.letter; }));
+  
+    // y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+    // g.append("g")
+    //     .attr("class", "axis axis--x")
+    //     .attr("transform", "translate(0," + height + ")")
+    //     .call(d3.axisBottom(x));
+
+    // get arrays of fertility rate data and life Expectancy data
+    // let time_data = allYearsData.map((row) => parseFloat(row["time"]));
+    // let pop_data = allYearsData.map((row) => parseFloat(row["pop_mlns"]));
+
+    // find data limits
+    // let axesLimits = findMinMax(time_data, pop_data);
+
+    // // draw axes and return scaling + mapping functions
+    // let mapFunctions = drawAxes(axesLimits, "time", "pop_mlns", svgContainer, {min: svgContainerMargin, max: svgContainerDim-svgContainerMargin}, {min: svgContainerMargin, max: svgContainerDim-svgContainerMargin});
+
+    // let countryArray = d3.map(allYearsData, function(d){return d.location;}).keys().sort()
+
+    // // plot data as points and add tooltip functionality
+    // plotData(mapFunctions, countryArray);
+
+    // svgContainer.selectAll("path.line")
+    //   .attr("display", "none");
+
+    // svgContainer.select("path." + country)
+    //   .attr("display", "inline");
+
+    // // draw title and axes labels
+    // makeLabels(svgContainer, 'axis-container', 'Time (years)', 'Population (millions)', svgContainerDim, svgContainerDim);
+  }
+
+  function makeTooltipPlotDraft() {
+    svgTooltip.html("")
+      .attr('class', 'line-graph');
+
+    // svgTooltip.append('path')
+    //   .datum(yearData)
+    //   .attr('class', years[i] + " line")
+    //   .attr("fill", "none")
+    //   .attr("stroke", "#4e79a7")
+    //   .attr("stroke-linejoin", "round")
+    //   .attr("stroke-linecap", "round")
+    //   .attr("stroke-width", 4)
+    //   .attr("d", line)
+    //   .on("mouseover", (d) => {
+    //     div.transition()
+    //       .duration(200)
+    //       .style("opacity", 1)
+    //       .style("left", (d3.event.pageX) + "px")
+    //       .style("top", (d3.event.pageY - 28) + "px");
+    //   })
+    //   .on("mouseout", (d) => {
+    //     div.transition()
+    //       .duration(500)
+    //       .style("opacity", 0);
+    //   });
+
+    svgTooltip.append('text')
+      .attr('y', svgTooltipMargin)
+      .attr('x', svgTooltipDim/2 - 2*svgTooltipMargin)
       .attr('font-size', '8pt')
-      .text("Fertility Rate vs. Life Expectancy");
+      .text("Average Travel Times by Period");
 
-    let fertility_rate_data = allYearsData.map((row) => parseFloat(row["fertility_rate"]));
-    let life_expectancy_data = allYearsData.map((row) => parseFloat(row["life_expectancy"]));
+    let fertility_rate_data = data.map((row) => parseFloat(row["fertility_rate"]));
+    let life_expectancy_data = data.map((row) => parseFloat(row["life_expectancy"]));
 
     let axesLimits = findMinMax(fertility_rate_data, life_expectancy_data);
 
     // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "fertility_rate", "life_expectancy", svgScatterPlot, {min: svgScatterMargin, max: svgScatterDim-svgScatterMargin}, {min: svgScatterMargin, max: svgScatterDim-svgScatterMargin});
+    let mapFunctions = drawAxes(axesLimits, "fertility_rate", "life_expectancy", svgTooltip, {min: svgTooltipMargin, max: svgTooltipDim-svgTooltipMargin}, {min: svgTooltipMargin, max: svgTooltipDim-svgTooltipMargin});
     let xMap = mapFunctions.x;
     let yMap = mapFunctions.y;
 
-    makeLabels(svgScatterPlot, 'axis-scatter', 'Fertility Rate', 'Life Expectancy', svgScatterDim, svgScatterDim);
+    makeLabels(svgTooltip, 'axis-scatter', 'Holiday', 'Daily Mean Travel Time (Minutes)', svgTooltipDim, svgTooltipDim);
 
-    svgScatterPlot.selectAll('.dot')
-      .data(allYearsData)
-      .enter()
-      .append('circle')
-        .attr('cx', xMap)
-        .attr('cy', yMap)
-        .attr('r', 1)
-        .attr('opacity', '0.8')
-        .attr('fill', "#4e79a7");
   }
 
   // draw the axes and ticks
   // function drawAxes(limits, x, y, svg, rangeX, rangeY) {
-  function drawAxes(limits, x, y, rangeX, rangeY) {
+  function drawAxes(limits, x, y, svgElement, rangeX, rangeY) {
     let xMin = rangeX.min
     let xMax = rangeX.max
     let yMin = rangeY.min
     let yMax = rangeY.max
-
-    // return x value from a row of data
-    let xValue = function(d) { return +d[x]; }
 
     // if (svg.attr('class') == 'scatter') {
     //   xMin = 40;
@@ -301,15 +378,8 @@
     // function to scale x value
     var xScale = d3.scaleBand()
       .domain(limits.xArray)
-      .range([xMin, width-svgContainerMargin])
+      .range([xMin, svgElement.width-svgElement.margin])
       .padding(0.2);
-    // var xScale = d3.scaleOrdinal()
-    //   .domain(limits.xArray)
-    //   .range([xMin, width-svgContainerMargin]);
-
-    // xMap returns a scaled x value from a row of data
-    // let xMap = function(d) { return xScale(xValue(d)); };
-
 
     // plot x-axis at bottom of SVG
     let xAxis = d3.axisBottom().scale(xScale);
@@ -319,7 +389,7 @@
     // }
 
     //svg.append
-    svgContainer.append("g")
+    svgElement.svg.append("g")
       .attr('class', 'axis')
       .attr('transform', 'translate(0, ' + xMax + ')')
       .call(xAxis);
@@ -343,7 +413,7 @@
     // }
 
     //svg.append
-    svgContainer.append('g')
+    svgElement.svg.append('g')
       .attr('class', 'axis')
       .attr('transform', 'translate(' + rangeY.min + ', 0)')
       .call(yAxis);
@@ -359,11 +429,9 @@
 
   // find min and max for arrays of x and y
   function findMinMax(x, y) {
-    // get min/max x values
     let yMin = d3.min(y);
     let yMax = d3.max(y);
 
-    // return formatted min/max data as an object
     return {
       xArray : x,
       yMin : yMin,
