@@ -1,8 +1,8 @@
 ﻿Holiday,Year,Date,Daily Mean Travel Time (Seconds),Daily Range - Lower Bound Travel Time (Seconds),Daily Range - Upper Bound Travel Time (Seconds),AM Mean Travel Time (Seconds),AM Range - Lower Bound Travel Time (Seconds),AM Range - Upper Bound Travel Time (Seconds),PM Mean Travel Time (Seconds),PM Range - Lower Bound Travel Time (Seconds),PM Range - Upper Bound Travel Time (Seconds),Midday Mean Travel Time (Seconds),Midday Range - Lower Bound Travel Time (Seconds),Midday Range - Upper Bound Travel Time (Seconds),Evening Mean Travel Time (Seconds),Evening Range - Lower Bound Travel Time (Seconds),Evening Range - Upper Bound Travel Time (Seconds),Early Morning Mean Travel Time (Seconds),Early Morning Range - Lower Bound Travel Time (Seconds),Early Morning Range - Upper Bound Travel Time (Seconds)
 New Years Day,2016,1/1/2016,1473,1251,1735,1577,1309,1900,,,,1376,1234,1533,,,,1377,1242,1527
 New Years Day,2017,1/1/2017,1600.666667,1283.666667,2000.333333,1473,1238.5,1752,,,,1439.333333,1291,1607.333333,1749,1389,2201,1731.333333,1398.333333,2187
-Martin Luther King Jr. Day,2016,1/18/2016,1559,1297.333333,1874.666667,1457,1278,1668.333333,1768,1616,1935,1582.333333,1310,1924,1625,1400,1886,1538.666667,1321,1794
-Martin Luther King Jr. Day,2017,1/16/2017,,,,,,,,,,,,,,,,,,
+MLK Jr. Day,2016,1/18/2016,1559,1297.333333,1874.666667,1457,1278,1668.333333,1768,1616,1935,1582.333333,1310,1924,1625,1400,1886,1538.666667,1321,1794
+MLK Jr. Day,2017,1/16/2017,1592.333333,1264.333333,2009.666667,1463,1220,1755.333333,,,,1772.666667,1344.333333,2363.666667,1452,1324,1592,1487.333333,1256.666667,1761
 Presidents Day ,2016,2/15/2016,1597.333333,1305.333333,1955.666667,1443,1210,1724,,,,1682.666667,1379.666667,2056.333333,1474,1356,1602,1510.5,1245,1833.5
 Presidents Day ,2017,2/20/2017,1577.666667,1279.666667,1944.666667,1402.666667,1200.666667,1644,1831.5,1572.5,2143.5,1664.666667,1346.666667,2059,,,,1546.666667,1276.333333,1877
 Memorial Day,2016,5/30/2016,1462.333333,1238,1726.666667,1399.666667,1194,1642.333333,,,,1544,1329.333333,1795,,,,1434.5,1235.5,1666

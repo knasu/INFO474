@@ -4,8 +4,8 @@
 
   let data = "no data";
   let svgContainer = "";
-  let svgScatterPlot = "";
-  let width = 1200;
+  // let svgScatterPlot = "";
+  let width = 900;
   let height = 500;
   // let svgContainerDim = 500;
   // let svgContainerWidth = 
@@ -28,16 +28,15 @@
     d3.csv("./data/Averages.csv")
       .then((result) => {
         data = result
-        makeLineGraph("2016")
+        makeBarGraph('2016')
       });
   }
 
-  function makeLineGraph(year) {
+  function makeBarGraph(year) {
     // get arrays of fertility rate data and life Expectancy data
     let travelTime_data = data.map((row) => parseFloat(row["Daily Mean Travel Time (Seconds)"]));
-    let holiday_data = data.map((row) => row["Holiday"]);
-
-    console.log(holiday_data)
+    // let holiday_data = data.map((row) => row["Holiday"]);
+    let holiday_data = d3.map(data, function(d){return d.Holiday;}).keys()
 
     // find data limits
     let axesLimits = findMinMax(holiday_data, travelTime_data);
@@ -46,19 +45,30 @@
     // draw axes and return scaling + mapping functions
     let mapFunctions = drawAxes(axesLimits, "Holiday", "Daily Mean Travel Time (Seconds)", {min: svgContainerMargin, max: height-svgContainerMargin}, {min: svgContainerMargin, max: height-svgContainerMargin});
 
-    /*
-    let countryArray = d3.map(data, function(d){return d.location;}).keys().sort()
+    
+    let years = d3.map(data, function(d){return d.Year;}).keys().sort()
+    // console.log(yearArray)
 
     // plot data as points and add tooltip functionality
-    plotData(mapFunctions, countryArray);
-    makeDropdown(countryArray);
+    plotData(mapFunctions, years);
+    
+    makeDropdown(years);
 
-    svgContainer.selectAll("path.line")
-      .attr("display", "none");
-
-    svgContainer.select("path." + year)
+    svgContainer.selectAll("rect")
+      .filter(function(d) {return +year == d.Year;})
       .attr("display", "inline");
 
+    svgContainer.selectAll("rect")
+      .filter(function(d) {return +year != d.Year;})
+      .attr("display", "none");
+
+    // svgContainer.selectAll("rect")
+    //   .attr("display", "none");
+
+    // svgContainer.select("rect." + year)
+    //   .attr("display", "inline");
+
+    /*
     // draw title and axes labels
     makeLabels(svgContainer, 'axis-container', 'Time (years)', 'Population (millions)', svgContainerDim, svgContainerDim);
 
@@ -73,18 +83,20 @@
     */
   }
 
-  function makeDropdown(countries) {    
+  function makeDropdown(years) {    
     let dropDownDiv = d3.select("body").append("div")
       .attr("class", "dropdown-div")
+      .style('font-size', '15px');
 
     dropDownDiv.append("p")
-      .text("Select a year")
+      .text("Select a year");
     
     dropDownDiv.append("select")
-      .attr("name", "dropdown");
+      .attr("name", "dropdown")
+      .style('font-size', '15px');
 
     var options = dropDownDiv.select("select").selectAll("options")
-      .data(countries)
+      .data(years)
       .enter()
       .append("option");
     
@@ -94,17 +106,18 @@
     dropDownDiv.select("select").on("change", function() {
       var selected = this.value;
 
-      svgContainer.selectAll("path.line")
-        .attr("display", "none");
-
-      svgContainer.selectAll("." + selected)
+      svgContainer.selectAll("rect")
+        .filter(function(d) {return +selected == d.Year;})
         .attr("display", "inline");
 
-      svgContainer.select("text.year")
-        .text(selected)
+      svgContainer.selectAll("rect")
+        .filter(function(d) {return +selected != d.Year;})
+        .attr("display", "none");
+
+      // svgContainer.select("text.year")
+      //   .text(selected)
     });
   }
-  
 
   // make title and axes labels
   function makeLabels(svg, className, xLabel, yLabel, x, y) {
@@ -123,50 +136,74 @@
       .text(yLabel);
   }
 
-  function plotData(map, countries) {
+  function plotData(map, years) {
     // mapping functions
     let xMap = map.x;
     let yMap = map.y;
+    let barWidth = 30;
 
     // make tooltip
-    let div = d3.select("body").append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0);
+    // let div = d3.select("body").append("div")
+    //   .attr("class", "tooltip")
+    //   .style("opacity", 0);
 
-    svgScatterPlot = div.append('svg')
-      .attr('width', svgScatterDim)
-      .attr('height', svgScatterDim);
+    // svgScatterPlot = div.append('svg')
+    //   .attr('width', svgScatterDim)
+    //   .attr('height', svgScatterDim);
 
-    let line = d3.line()
-      .x((d) => xMap(d))
-      .y((d) => yMap(d));
+    // let line = d3.line()
+    //   .x((d) => xMap(d))
+    //   .y((d) => yMap(d));
 
-    for (let i = 0; i < countries.length; i++) {
-      let countryData = allYearsData.filter((row) => row["location"] == countries[i]);
+    for (let i = 0; i < years.length; i++) {
+      let yearData = data.filter((row) => row["Year"] == years[i]);
+      console.log(yearData)
 
-      svgContainer.append('path')
-        .datum(countryData)
-        .attr('class', countries[i] + " line")
-        .attr("fill", "none")
-        .attr("stroke", "#4e79a7")
-        .attr("stroke-linejoin", "round")
-        .attr("stroke-linecap", "round")
-        .attr("stroke-width", 4)
-        .attr("d", line)
-        .on("mouseover", (d) => {
-          div.transition()
-            .duration(200)
-            .style("opacity", 1)
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
+      svgContainer.selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('rect')
+          .attr("transform", function(d) { return "translate(" + (+xMap(d.Holiday)+20) + ",0)"; })
+          .attr('y', yMap)
+          .attr('class', 'bar ' + years[i])
+          .attr('width', barWidth)
+          // .attr('stroke', '#A9A9A9')
+          .attr('stroke-width', 1.9)
+          .attr('height', (d) => 450 - yMap(d))
+          .attr('display', 'inline')
+          // .attr('display', (d) => {
+          //   if (d.Year == '2017') {
+          //     return 'none'
+          //   } else {
+          //     return 'inline'
+          //   }
+          // })
+          .attr('fill', '#1B7CEB');
 
-          makeScatterPlot();
-        })
-        .on("mouseout", (d) => {
-          div.transition()
-            .duration(500)
-            .style("opacity", 0);
-        });
+
+      // svgContainer.append('path')
+      //   .datum(yearData)
+      //   .attr('class', years[i] + " line")
+      //   .attr("fill", "none")
+      //   .attr("stroke", "#4e79a7")
+      //   .attr("stroke-linejoin", "round")
+      //   .attr("stroke-linecap", "round")
+      //   .attr("stroke-width", 4)
+      //   .attr("d", line)
+        // .on("mouseover", (d) => {
+        //   div.transition()
+        //     .duration(200)
+        //     .style("opacity", 1)
+        //     .style("left", (d3.event.pageX) + "px")
+        //     .style("top", (d3.event.pageY - 28) + "px");
+
+          // makeScatterPlot();
+        // })
+        // .on("mouseout", (d) => {
+        //   div.transition()
+        //     .duration(500)
+        //     .style("opacity", 0);
+        // });
     }
   }
 
@@ -221,10 +258,15 @@
     // function to scale x value
     var xScale = d3.scaleBand()
       .domain(limits.xArray)
-      .rangeRound([xMin, width-svgContainerMargin]);
+      .range([xMin, width-svgContainerMargin])
+      .padding(0.2);
+    // var xScale = d3.scaleOrdinal()
+    //   .domain(limits.xArray)
+    //   .range([xMin, width-svgContainerMargin]);
 
     // xMap returns a scaled x value from a row of data
-    let xMap = function(d) { return xScale(xValue(d)); };
+    // let xMap = function(d) { return xScale(xValue(d)); };
+
 
     // plot x-axis at bottom of SVG
     let xAxis = d3.axisBottom().scale(xScale);
@@ -265,7 +307,7 @@
 
     // return mapping and scaling functions
     return {
-      x: xMap,
+      x: xScale,
       y: yMap,
       xScale: xScale,
       yScale: yScale
