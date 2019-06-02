@@ -3,13 +3,6 @@
 (function() {
 
   let data = "no data";
-  // let svgContainer = "";
-  // let svgTooltip = "";
-  // let width = 900;
-  // let height = 500;
-  // let svgContainerMargin = 50;
-  // let svgTooltipDim = 270;
-  // let svgTooltipMargin = 30;
 
   let svgContainer = {
     svg: "",
@@ -246,35 +239,6 @@
     let line = d3.line()
       .x(function(d,i) {return xMap(xLabels[i])})
       .y(function(d) {return yMap(d)});
-
-
-    // let line = d3.line()
-    //   .x((d) => xMap(d))
-    //   .y((d) => yMap(d));
-
-    // svgContainer.append('path')
-    //   .datum(countryData)
-    //   .attr('class', countries[i] + " line")
-    //   .attr("fill", "none")
-    //   .attr("stroke", "#4e79a7")
-    //   .attr("stroke-linejoin", "round")
-    //   .attr("stroke-linecap", "round")
-    //   .attr("stroke-width", 4)
-    //   .attr("d", line)
-    //   .on("mouseover", (d) => {
-    //     div.transition()
-    //       .duration(200)
-    //       .style("opacity", 1)
-    //       .style("left", (d3.event.pageX) + "px")
-    //       .style("top", (d3.event.pageY - 28) + "px");
-
-    //     makeScatterPlot();
-    //   })
-    //   .on("mouseout", (d) => {
-    //     div.transition()
-    //       .duration(500)
-    //       .style("opacity", 0);
-    //   });
 
     // var color = d3.scale.category10();
 
