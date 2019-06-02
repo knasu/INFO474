@@ -8,14 +8,14 @@
     svg: "",
     width: 900,
     height: 500,
-    margin: 50
+    margin: 75
   }
 
   let svgTooltip = {
     svg: "",
     height: 270,
     width: 270,
-    margin: 30
+    margin: 45
   }
 
   // load data and make scatter plot after window loads
@@ -185,7 +185,7 @@
           .attr('width', barWidth)
           // .attr('stroke', '#A9A9A9')
           .attr('stroke-width', 1.9)
-          .attr('height', (d) => 450 - yMap(d))
+          .attr('height', (d) => svgContainer.height-svgContainer.margin - yMap(d))
           .attr('display', 'inline')
           .attr('fill', '#1B7CEB')
           .on('mouseover', (d) => {
@@ -222,15 +222,11 @@
         max = maxTemp;
       }
     }
-    console.log(max)
-
 
     let tooltipData = {
       key : d.Holiday,
       values : [d.AM, d.Midday, d.PM, d.Evening, d['Early Morning']]
     }
-
-    console.log(tooltipData)
 
     svgTooltip.svg.html("")
 
@@ -242,8 +238,6 @@
 
     let xLabels = ['AM', 'Midday', 'PM', 'Evening', 'Early Morning']
 
-    // let axesLimits = findMinMax(xLabels, tooltipData.values)
-    // console.log(axesLimits)
     let axesLimits = {
       xArray : xLabels,
       yMin : 0,
@@ -345,7 +339,7 @@
     //svg.append
     svgElement.svg.append('g')
       .attr('class', 'axis')
-      .attr('transform', 'translate(' + rangeY.min + ', 0)')
+      .attr('transform', 'translate(' + yMin + ', 0)')
       .call(yAxis);
 
     // return mapping and scaling functions
