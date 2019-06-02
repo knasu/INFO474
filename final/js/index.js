@@ -171,7 +171,7 @@
         .data(data)
         .enter()
         .append('text')
-            .attr('x', (d) => +xMap(d.Holiday)+20)
+            .attr('x', (d) => +xMap(d.Holiday)+28)
             .attr('y', (d) => yMap(d) - 3)
             .attr('font-size', 12)
             .attr('class', (d) => { 
@@ -187,7 +187,7 @@
         .data(data)
         .enter()
         .append('rect')
-          .attr('x', (d) => +xMap(d.Holiday)+20)
+          .attr('x', (d) => +xMap(d.Holiday)+28)
           .attr('y', yMap)
           .attr('class', 'bar ' + years[i])
           .attr('width', barWidth)
