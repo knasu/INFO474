@@ -25,9 +25,6 @@
     margin: 30
   }
 
-  // let svgScatterMargin = 40;
-  // let svgScatterDim = 260;
-
   // load data and make scatter plot after window loads
   window.onload = function() {
     d3.select('body').append('text')
@@ -58,14 +55,14 @@
     console.log(axesLimits)
 
     // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "Holiday", "Daily Mean Travel Time (Minutes)", svgContainer, {min: svgContainer.margin, max: svgContainer.height-svgContainer.margin}, {min: svgContainer.margin, max: svgContainer.height-svgContainer.margin});
+    let mapFunctions = drawAxes(axesLimits, "Daily Mean Travel Time (Minutes)", svgContainer, {min: svgContainer.margin, max: svgContainer.height-svgContainer.margin}, {min: svgContainer.margin, max: svgContainer.height-svgContainer.margin});
 
     
     let years = d3.map(data, function(d){return d.Year;}).keys().sort()
     // console.log(yearArray)
 
     // plot data as points and add tooltip functionality
-    plotData(mapFunctions, years);
+    plotBarData(mapFunctions, years);
     
     makeDropdown(years);
     
@@ -151,7 +148,7 @@
       .text(yLabel);
   }
 
-  function plotData(map, years) {
+  function plotBarData(map, years) {
     // mapping functions
     let xMap = map.x;
     let yMap = map.y;
@@ -216,18 +213,6 @@
   }
 
   function makeTooltipPlot(d) {
-    // AM, Midday, PM, Evening, Early Morning
-    // let tooltipData = {
-    //   holiday : barData.Holiday,
-    //   year : barData.Year,
-    //   x : ['AM', 'Midday', 'PM', 'Evening', 'Early Morning'],
-    //   y : [barData.AM, barData.Midday, barData.PM, barData.Evening, barData['Early Morning']],
-    //   am : barData.AM,
-    //   midday : barData.Midday,
-    //   pm : barData.PM,
-    //   evening : barData.Evening,
-    //   earlyMorning : barData['Early Morning']
-    // }
 
     let tooltipData = {
       key : d.Holiday,
@@ -237,7 +222,6 @@
     console.log(tooltipData)
 
     svgTooltip.svg.html("")
-      // .attr('class', 'line-graph');
 
     // svgTooltip.append('text')
     //   .attr('y', svgTooltipMargin)
@@ -246,84 +230,31 @@
     //   .text("Average Travel Times by Period for " + tooltipData.holiday + " " + tooltipData.year);
 
     let xLabels = ['AM', 'Midday', 'PM', 'Evening', 'Early Morning']
-    let x = d3.scaleBand().domain(xLabels).rangeRound([0, svgTooltip.width]).padding(0.1);
-    let y = d3.scaleLinear().domain([0, d3.max(tooltipData.values)]).rangeRound([svgTooltip.height, 0]);
 
     let axesLimits = findMinMax(xLabels, tooltipData.values)
     console.log(axesLimits)
 
     // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "fertility_rate", "life_expectancy", svgTooltip, {min: svgTooltip.margin, max: svgTooltip.width-svgTooltip.margin}, {min: svgTooltip.margin, max: svgTooltip.height-svgTooltip.margin});
+    let mapFunctions = drawAxes(axesLimits, "life_expectancy", svgTooltip, {min: svgTooltip.margin, max: svgTooltip.width-svgTooltip.margin}, {min: svgTooltip.margin, max: svgTooltip.height-svgTooltip.margin});
+    let xMap = d3.scaleBand().domain(xLabels).rangeRound([svgTooltip.margin, svgTooltip.width]).padding(0.3);
+    let yMap = d3.scaleLinear().domain([0, d3.max(tooltipData.values)]).rangeRound([svgTooltip.height-svgTooltip.margin, svgTooltip.margin]);
+    // let xMap = mapFunctions.x
+    // let yMap = mapFunctions.y
 
     makeLabels(svgTooltip.svg, 'line-graph', 'Time of Day', 'Average Travel Time (Minutes)', svgTooltip.width, svgTooltip.height);
 
     let line = d3.line()
-      .x(function(d,i) { return x(xLabels[i])})
-      .y(function(d,i) { return y(d)});
+      .x(function(d,i) {return xMap(xLabels[i])})
+      .y(function(d) {return yMap(d)});
 
-    // var color = d3.scale.category10();
 
-    var g = svgTooltip.svg.selectAll(".lineGroup")
-      .data(data)
-      .enter().append("g")
-      .attr("class", "lineGroup " + tooltipData.key);
+    // let line = d3.line()
+    //   .x((d) => xMap(d))
+    //   .y((d) => yMap(d));
 
-    g.append("path")
-      .attr("class", "line")
-      .attr("d", line(tooltipData.values))
-      .style('stroke', '#1B7CEB')
-      // .style("stroke", function(d,i) {
-      //   return color(i);
-      // })
-      .attr("fill","none");
-    
-      // var g = svgTooltip.append("g")
-    //   .attr("transform", "translate(" + svgTooltipMargin + "," + svgTooltipMargin + ")");
-    
-    // var line = d3.line()
-    //   .x(function(d) { return x(tooltipData.x); })
-    //   .y(function(d) { return y(tooltipData.frequency); })
-  
-    // x.domain(data.map(function(d) { return d.letter; }));
-  
-    // y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
-    // g.append("g")
-    //     .attr("class", "axis axis--x")
-    //     .attr("transform", "translate(0," + height + ")")
-    //     .call(d3.axisBottom(x));
-
-    // get arrays of fertility rate data and life Expectancy data
-    // let time_data = allYearsData.map((row) => parseFloat(row["time"]));
-    // let pop_data = allYearsData.map((row) => parseFloat(row["pop_mlns"]));
-
-    // find data limits
-    // let axesLimits = findMinMax(time_data, pop_data);
-
-    // // draw axes and return scaling + mapping functions
-    // let mapFunctions = drawAxes(axesLimits, "time", "pop_mlns", svgContainer, {min: svgContainerMargin, max: svgContainerDim-svgContainerMargin}, {min: svgContainerMargin, max: svgContainerDim-svgContainerMargin});
-
-    // let countryArray = d3.map(allYearsData, function(d){return d.location;}).keys().sort()
-
-    // // plot data as points and add tooltip functionality
-    // plotData(mapFunctions, countryArray);
-
-    // svgContainer.selectAll("path.line")
-    //   .attr("display", "none");
-
-    // svgContainer.select("path." + country)
-    //   .attr("display", "inline");
-
-    // // draw title and axes labels
-    // makeLabels(svgContainer, 'axis-container', 'Time (years)', 'Population (millions)', svgContainerDim, svgContainerDim);
-  }
-
-  function makeTooltipPlotDraft() {
-    svgTooltip.html("")
-      .attr('class', 'line-graph');
-
-    // svgTooltip.append('path')
-    //   .datum(yearData)
-    //   .attr('class', years[i] + " line")
+    // svgContainer.append('path')
+    //   .datum(countryData)
+    //   .attr('class', countries[i] + " line")
     //   .attr("fill", "none")
     //   .attr("stroke", "#4e79a7")
     //   .attr("stroke-linejoin", "round")
@@ -336,6 +267,8 @@
     //       .style("opacity", 1)
     //       .style("left", (d3.event.pageX) + "px")
     //       .style("top", (d3.event.pageY - 28) + "px");
+
+    //     makeScatterPlot();
     //   })
     //   .on("mouseout", (d) => {
     //     div.transition()
@@ -343,29 +276,29 @@
     //       .style("opacity", 0);
     //   });
 
-    svgTooltip.append('text')
-      .attr('y', svgTooltipMargin)
-      .attr('x', svgTooltipDim/2 - 2*svgTooltipMargin)
-      .attr('font-size', '8pt')
-      .text("Average Travel Times by Period");
+    // var color = d3.scale.category10();
 
-    let fertility_rate_data = data.map((row) => parseFloat(row["fertility_rate"]));
-    let life_expectancy_data = data.map((row) => parseFloat(row["life_expectancy"]));
+    var g = svgTooltip.svg.selectAll(".lineGroup")
+      .data(data)
+      .enter().append("g")
+      .attr("class", "lineGroup " + tooltipData.key);
 
-    let axesLimits = findMinMax(fertility_rate_data, life_expectancy_data);
-
-    // draw axes and return scaling + mapping functions
-    let mapFunctions = drawAxes(axesLimits, "fertility_rate", "life_expectancy", svgTooltip, {min: svgTooltipMargin, max: svgTooltipDim-svgTooltipMargin}, {min: svgTooltipMargin, max: svgTooltipDim-svgTooltipMargin});
-    let xMap = mapFunctions.x;
-    let yMap = mapFunctions.y;
-
-    makeLabels(svgTooltip, 'axis-scatter', 'Holiday', 'Daily Mean Travel Time (Minutes)', svgTooltipDim, svgTooltipDim);
-
+    g.append("path")
+      .attr("class", "line")
+      .attr("stroke", "#4e79a7")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 4)
+      .attr("d", line(tooltipData.values))
+      // .style("stroke", function(d,i) {
+      //   return color(i);
+      // })
+      .attr("fill","none");
   }
 
   // draw the axes and ticks
   // function drawAxes(limits, x, y, svg, rangeX, rangeY) {
-  function drawAxes(limits, x, y, svgElement, rangeX, rangeY) {
+  function drawAxes(limits, y, svgElement, rangeX, rangeY) {
     let xMin = rangeX.min
     let xMax = rangeX.max
     let yMin = rangeY.min
@@ -378,8 +311,7 @@
     // function to scale x value
     var xScale = d3.scaleBand()
       .domain(limits.xArray)
-      .range([xMin, svgElement.width-svgElement.margin])
-      .padding(0.2);
+      .range([xMin, svgElement.width-svgElement.margin]);
 
     // plot x-axis at bottom of SVG
     let xAxis = d3.axisBottom().scale(xScale);
