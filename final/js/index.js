@@ -257,7 +257,7 @@
       .attr("transform", "rotate(-90)");
 
 
-    makeLabels(svgTooltip.svg, 'line-graph', 'Time of Day', 'Average Travel Time (Minutes)', svgTooltip.width, svgTooltip.height);
+    makeLabels(svgTooltip.svg, 'line-graph', '', 'Average Travel Time (Minutes)', svgTooltip.width, svgTooltip.height);
 
     let line = d3.line()
       .x(function(d,i) {return xMap(xLabels[i])})
