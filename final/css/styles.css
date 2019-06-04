@@ -26,6 +26,10 @@ div.tooltip {
     pointer-events: none;
 }
 
+/* .tooltip-title {
+    width: 10px;
+} */
+
 .dropdown-div {
     position: absolute;
     top: 110px;

@@ -230,12 +230,12 @@
 
     svgTooltip.svg.html("")
 
-
-    // svgTooltip.append('text')
-    //   .attr('y', svgTooltipMargin)
-    //   .attr('x', svgTooltipDim/2 - 2*svgTooltipMargin)
-    //   .attr('font-size', '8pt')
-    //   .text("Average Travel Times by Period for " + tooltipData.holiday + " " + tooltipData.year);
+    svgTooltip.svg.append('text')
+      .attr('class', 'tooltip-title')
+      .attr('y', svgTooltip.margin/2)
+      .attr('x', svgTooltip.height/2 - 2*svgTooltip.margin)
+      .attr('font-size', '7pt')
+      .text("Average Travel Times by Period for " + tooltipData.key);
 
     let xLabels = ['AM', 'Midday', 'PM', 'Evening', 'Early Morning']
 
