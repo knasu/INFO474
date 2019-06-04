@@ -230,6 +230,7 @@
 
     svgTooltip.svg.html("")
 
+
     // svgTooltip.append('text')
     //   .attr('y', svgTooltipMargin)
     //   .attr('x', svgTooltipDim/2 - 2*svgTooltipMargin)
@@ -246,10 +247,15 @@
 
     // draw axes and return scaling + mapping functions
     drawAxes(axesLimits, "", svgTooltip, {min: svgTooltip.margin, max: svgTooltip.width-svgTooltip.margin}, {min: svgTooltip.margin, max: svgTooltip.height-svgTooltip.margin});
-    let xMap = d3.scaleBand().domain(xLabels).rangeRound([svgTooltip.margin, svgTooltip.width]).padding(0.3);
+    let xMap = d3.scaleBand().domain(xLabels).rangeRound([svgTooltip.margin, svgTooltip.width-svgTooltip.margin/2]).padding(0.4);
     let yMap = d3.scaleLinear().domain([0, max]).rangeRound([svgTooltip.height-svgTooltip.margin, svgTooltip.margin]);
-    // let xMap = mapFunctions.x
-    // let yMap = mapFunctions.y
+
+    svgTooltip.svg.selectAll('.x-axis text')
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", "-0.7em")
+      .attr("transform", "rotate(-90)");
+
 
     makeLabels(svgTooltip.svg, 'line-graph', 'Time of Day', 'Average Travel Time (Minutes)', svgTooltip.width, svgTooltip.height);
 
@@ -313,10 +319,19 @@
     // }
 
     //svg.append
-    svgElement.svg.append("g")
-      .attr('class', 'axis')
+    svgElement.svg.append('g')
+      .attr('class', 'x-axis')
       .attr('transform', 'translate(0, ' + xMax + ')')
       .call(xAxis);
+
+    // svgContainer.append('g')
+    //   .attr('transform', 'translate(-20, 450)')
+    //   .call(xAxis)
+    //   .selectAll("text")	
+    //     .style("text-anchor", "end")
+    //     .attr("dx", "-.8em")
+    //     .attr("dy", "2em")
+    //     .attr("transform", "rotate(-90)");
 
     // return y value from a row of data
     let yValue = function(d) { return +d[y]}
