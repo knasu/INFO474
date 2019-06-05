@@ -5,7 +5,7 @@ path {
     fill: none;
 }
 
-.axis path,
+path,
 .axis line {
     fill: none;
     stroke: gray;
@@ -17,8 +17,6 @@ path {
 div.tooltip {
     position: absolute;
     text-align: center;
-    /* width: 260px;
-    height: 260px; */
     font: 8px sans-serif;
     background: white;
     border: solid lightslategrey 1px;
@@ -26,9 +24,9 @@ div.tooltip {
     pointer-events: none;
 }
 
-/* .tooltip-title {
-    width: 10px;
-} */
+.tooltip-title {
+    text-anchor: middle;
+}
 
 .dropdown-div {
     position: absolute;
@@ -52,11 +50,7 @@ svg.container {
 }
 
 text.axis-container {
-    font-size: 10pt;
-}
-
-text.axis-scatter {
-    font-size: 7pt;
+    font-size: 13pt;
 }
 
 .line-graph g {

@@ -44,14 +44,12 @@
 
     // find data limits
     let axesLimits = findMinMax(holiday_data, travelTime_data);
-    console.log(axesLimits)
 
     // draw axes and return scaling + mapping functions
     let mapFunctions = drawAxes(axesLimits, "Daily Mean Travel Time (Minutes)", svgContainer, {min: svgContainer.margin, max: svgContainer.height-svgContainer.margin}, {min: svgContainer.margin, max: svgContainer.height-svgContainer.margin});
 
     
     let years = d3.map(data, function(d){return d.Year;}).keys().sort()
-    // console.log(yearArray)
 
     // plot data as points and add tooltip functionality
     plotBarData(mapFunctions, years);
@@ -77,7 +75,7 @@
     });
     
     // draw title and axes labels
-    makeLabels(svgContainer.svg, 'axis-container', 'Holiday', 'Travel Time (minutes)', svgContainer.width, svgContainer.height);   
+    makeLabels(svgContainer.svg, 'axis-container', 'Holiday', 'Travel Time (minutes)', svgContainer.width+svgContainer.margin, svgContainer.height);   
   }
 
   function makeDropdown(years) {    
@@ -183,7 +181,6 @@
           .attr('y', yMap)
           .attr('class', 'bar ' + years[i])
           .attr('width', barWidth)
-          // .attr('stroke', '#A9A9A9')
           .attr('stroke-width', 1.9)
           .attr('height', (d) => svgContainer.height-svgContainer.margin - yMap(d))
           .attr('display', 'inline')
@@ -217,7 +214,6 @@
 
     for (let i = 0; i < allTooltipData.length; i++) {
       let maxTemp = d3.max(allTooltipData[i])
-      console.log(allTooltipData[i].length)
       if (maxTemp > max) {
         max = maxTemp;
       }
@@ -233,7 +229,7 @@
     svgTooltip.svg.append('text')
       .attr('class', 'tooltip-title')
       .attr('y', svgTooltip.margin/2)
-      .attr('x', svgTooltip.height/2 - 2*svgTooltip.margin)
+      .attr('x', '50%')
       .attr('font-size', '7pt')
       .text("Average Travel Times by Period for " + tooltipData.key);
 
@@ -257,7 +253,7 @@
       .attr("transform", "rotate(-90)");
 
 
-    makeLabels(svgTooltip.svg, 'line-graph', '', 'Average Travel Time (Minutes)', svgTooltip.width, svgTooltip.height);
+    makeLabels(svgTooltip.svg, 'line-graph', '', 'Average Travel Time (Minutes)', svgTooltip.width, svgTooltip.height+svgTooltip.margin);
 
     let line = d3.line()
       .x(function(d,i) {return xMap(xLabels[i])})
@@ -277,9 +273,6 @@
       .attr("stroke-linecap", "round")
       .attr("stroke-width", 4)
       .attr("d", line(tooltipData.values))
-      // .style("stroke", function(d,i) {
-      //   return color(i);
-      // })
       .attr("fill","none");
 
 
@@ -295,16 +288,11 @@
   }
 
   // draw the axes and ticks
-  // function drawAxes(limits, x, y, svg, rangeX, rangeY) {
   function drawAxes(limits, y, svgElement, rangeX, rangeY) {
     let xMin = rangeX.min
     let xMax = rangeX.max
     let yMin = rangeY.min
     let yMax = rangeY.max
-
-    // if (svg.attr('class') == 'scatter') {
-    //   xMin = 40;
-    // }
 
     // function to scale x value
     var xScale = d3.scaleBand()
@@ -314,24 +302,10 @@
     // plot x-axis at bottom of SVG
     let xAxis = d3.axisBottom().scale(xScale);
 
-    // if (svg.attr('class') == 'scatter') {
-    //   xAxis.ticks(5)
-    // }
-
-    //svg.append
     svgElement.svg.append('g')
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0, ' + xMax + ')')
       .call(xAxis);
-
-    // svgContainer.append('g')
-    //   .attr('transform', 'translate(-20, 450)')
-    //   .call(xAxis)
-    //   .selectAll("text")	
-    //     .style("text-anchor", "end")
-    //     .attr("dx", "-.8em")
-    //     .attr("dy", "2em")
-    //     .attr("transform", "rotate(-90)");
 
     // return y value from a row of data
     let yValue = function(d) { return +d[y]}
@@ -346,10 +320,6 @@
 
     // plot y-axis at the left of SVG
     let yAxis = d3.axisLeft().scale(yScale);
-
-    // if (svg.attr('class') == 'scatter') {
-    //   yAxis.ticks(10)
-    // }
 
     //svg.append
     svgElement.svg.append('g')
